@@ -82,6 +82,24 @@ The sharded H6 run is the one actually used; `run_onboard.py` is deterministic
 given `--domains` and `--seeds`, and `merge_onboard.py` de-duplicates on
 `(domain, seed, expert)` so a repeated shard cannot double-count.
 
+## Publishing from a restricted network
+
+`git push` to `github.com:443` is not available from the machine this was built
+on: the HTTP proxy answers `CONNECT tunnel failed, response 502` and a direct
+connection times out, while `api.github.com` stays reachable.  `scripts/push_via_api.py`
+reconstructs the local commit over the reachable host using the Git Data API
+(blobs -> tree -> commit -> ref).  Two details it has to get right, both of which
+silently produce a *different* commit id if ignored: blob content must come from
+`git cat-file blob HEAD:<path>` rather than the working tree (this repository runs
+`core.autocrlf=input`, so on-disk bytes are CRLF while the stored blob is LF), and
+file modes must come from `git ls-tree` because `os.access(path, os.X_OK)` is true
+for ordinary files on Windows.
+
+Note that the resulting commit id still differs from the local one: GitHub
+normalises commit dates to UTC, so the raw commit object is not byte-identical
+even though the **tree** is.  Identical trees are the meaningful check, and the
+script prints that comparison.
+
 The raw forecasts are cached under `results/pool` and `results/stream` and are
 not distributed; the commands above rebuild them from the public source datasets
 (see `docs/PROTOCOL.md` for the expected layout).
