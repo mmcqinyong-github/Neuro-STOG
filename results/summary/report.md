@@ -29,8 +29,11 @@ came out, including the ones that failed.
   any causal method, yet the signal that would identify it is not
   learnable from features observable before the day.
 * On streams whose data-generating process genuinely changes, the same
-  architecture gains substantially, and the gain grows with the amount of
-  genuine change (the ladder table below).
+  architecture gains, but the gain is *modest* rather than large: +1.47% to +3.94%
+  over the three regime-switching rungs (SW-2 / SW-4 / SW-X).
+  It does **not** increase monotonically as more sources are mixed, so
+  we do not claim a dose-response from degree of change to gain; see the
+  ladder table below for the per-seed spread.
 
 # Pre-registered verdicts
 
@@ -66,13 +69,13 @@ came out, including the ones that failed.
 
 ## Dose-response along the non-stationarity ladder
 
-| rung | construction | mean gain % | median % | min % | max % |
-|---|---|---|---|---|---|
-| STAT-0 | contiguous single series (stationary control) | +0.86 | +0.86 | +0.86 | +0.86 |
-| STAT-1 | same series, spliced windows (splice control) | -0.83 | -0.83 | -0.83 | -0.83 |
-| SW-2 | two series, same family | +3.94 | +3.94 | +3.94 | +3.94 |
-| SW-4 | four series, same family | +1.87 | +1.87 | +1.87 | +1.87 |
-| SW-X | three series, different families | +1.47 | +1.47 | +1.47 | +1.47 |
+| rung | construction | n seeds | mean gain % | sd | median % | min % | max % |
+|---|---|---|---|---|---|---|---|
+| STAT-0 | contiguous single series (stationary control) | 5 | +0.86 | 0.18 | +0.94 | +0.63 | +1.07 |
+| STAT-1 | same series, spliced windows (splice control) | 5 | -0.83 | 0.95 | -0.71 | -2.24 | +0.39 |
+| SW-2 | two series, same family | 5 | +3.94 | 0.19 | +4.00 | +3.76 | +4.20 |
+| SW-4 | four series, same family | 5 | +1.87 | 0.28 | +1.93 | +1.39 | +2.16 |
+| SW-X | three series, different families | 5 | +1.47 | 1.44 | +2.14 | -0.61 | +2.87 |
 
 ## Mechanism pricing (delta W vs the full architecture)
 

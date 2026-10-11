@@ -50,49 +50,55 @@
    {
     "rung": "STAT-0",
     "label": "contiguous single series (stationary control)",
-    "n_seeds": 1,
-    "gain_pct_mean": 0.861617753459164,
-    "gain_pct_median": 0.861617753459164,
-    "gain_pct_min": 0.861617753459164,
-    "gain_pct_max": 0.861617753459164
+    "n_seeds": 5,
+    "gain_pct_mean": 0.8616177534591618,
+    "gain_pct_sd": 0.18385116571464552,
+    "gain_pct_median": 0.9420610254207059,
+    "gain_pct_min": 0.6267403410679844,
+    "gain_pct_max": 1.065779589050036
    },
    {
     "rung": "STAT-1",
     "label": "same series, spliced windows (splice control)",
-    "n_seeds": 1,
-    "gain_pct_mean": -0.8319814106608143,
-    "gain_pct_median": -0.8319814106608143,
-    "gain_pct_min": -0.8319814106608143,
-    "gain_pct_max": -0.8319814106608143
+    "n_seeds": 5,
+    "gain_pct_mean": -0.8319814106608234,
+    "gain_pct_sd": 0.952777935866756,
+    "gain_pct_median": -0.7108884894803071,
+    "gain_pct_min": -2.238057350837383,
+    "gain_pct_max": 0.38985781106577666
    },
    {
     "rung": "SW-2",
     "label": "two series, same family",
-    "n_seeds": 1,
-    "gain_pct_mean": 3.9437064080186564,
-    "gain_pct_median": 3.9437064080186564,
-    "gain_pct_min": 3.9437064080186564,
-    "gain_pct_max": 3.9437064080186564
+    "n_seeds": 5,
+    "gain_pct_mean": 3.9437064080186524,
+    "gain_pct_sd": 0.18719401410646977,
+    "gain_pct_median": 3.9974113010297336,
+    "gain_pct_min": 3.7570139625572057,
+    "gain_pct_max": 4.2004703413409645
    },
    {
     "rung": "SW-4",
     "label": "four series, same family",
-    "n_seeds": 1,
-    "gain_pct_mean": 1.8650487372127789,
-    "gain_pct_median": 1.8650487372127789,
-    "gain_pct_min": 1.8650487372127789,
-    "gain_pct_max": 1.8650487372127789
+    "n_seeds": 5,
+    "gain_pct_mean": 1.8650487372127784,
+    "gain_pct_sd": 0.28363949552833156,
+    "gain_pct_median": 1.926567745520272,
+    "gain_pct_min": 1.3898367649610577,
+    "gain_pct_max": 2.1554091872645444
    },
    {
     "rung": "SW-X",
     "label": "three series, different families",
-    "n_seeds": 1,
-    "gain_pct_mean": 1.4697870282838912,
-    "gain_pct_median": 1.4697870282838912,
-    "gain_pct_min": 1.4697870282838912,
-    "gain_pct_max": 1.4697870282838912
+    "n_seeds": 5,
+    "gain_pct_mean": 1.4697870282838628,
+    "gain_pct_sd": 1.4376368113864504,
+    "gain_pct_median": 2.1369553072555303,
+    "gain_pct_min": -0.6144511753761763,
+    "gain_pct_max": 2.8672729539872805
    }
   ],
+  "dose_response_monotone": false,
   "passed": false,
   "real_equivalence": {
    "n_domains": 11,

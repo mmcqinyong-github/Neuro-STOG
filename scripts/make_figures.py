@@ -519,7 +519,7 @@ def fig8_ladder():
     ax.axhline(8.0, color=PALETTE["red_strong"], lw=0.7, ls=":", zorder=0)
     ax.set_xticks(x)
     ax.set_xticklabels(rungs, fontsize=6.0, rotation=0)
-    ax.set_xlabel("more genuine distribution change  $\\rightarrow$", fontsize=6.2)
+    ax.set_xlabel("ladder rung (increasing multi-source mixing)  $\\rightarrow$", fontsize=6.2)
     ax.set_ylabel("gain over best causal\nbaseline (%)", fontsize=6.2)
     ax.legend(fontsize=5.4, loc="upper left", frameon=False)
     save(fig, "Fig8_nonstationarity_ladder")

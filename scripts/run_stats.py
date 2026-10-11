@@ -156,17 +156,28 @@ def main():
     h1_ctl = summarise(is_control, "splicing / stationarity controls")
     h1_real = summarise(is_real, "real benchmarks")
 
-    # dose-response: gain along the ladder
+    # dose-response: gain along the ladder.
+    # NOTE: built from `rows` (one entry per domain *per architecture seed*),
+    # NOT from `h1_rows`, which is already averaged over seeds.  Using the
+    # averaged table made n_seeds=1 and min=max=mean, i.e. it reported a
+    # degenerate range and hid the true seed-to-seed dispersion.
     ladder_rows = []
     for rung in LADDER:
-        g = [r["gain_pct"] for r in h1_rows if r["domain"] == rung]
-        if not g:
+        g = np.array([r["gain_pct"] for r in rows if r["domain"] == rung])
+        if g.size == 0:
             continue
         ladder_rows.append(dict(rung=rung, label=LADDER_LABEL[rung],
-                                n_seeds=len(g), gain_pct_mean=float(np.mean(g)),
+                                n_seeds=int(g.size), gain_pct_mean=float(np.mean(g)),
+                                gain_pct_sd=float(np.std(g, ddof=1)) if g.size > 1 else 0.0,
                                 gain_pct_median=float(np.median(g)),
                                 gain_pct_min=float(np.min(g)),
                                 gain_pct_max=float(np.max(g))))
+
+    # headline wording is derived from the ladder so it cannot drift from the data
+    _g = {r["rung"]: r["gain_pct_mean"] for r in ladder_rows}
+    _sw = [_g[k] for k in ("SW-2", "SW-4", "SW-X") if k in _g]
+    _sw_txt = ("+%.2f%% to +%.2f%%" % (min(_sw), max(_sw))) if _sw else "n/a"
+    _mono = bool(len(_sw) == 3 and _sw[0] <= _sw[1] <= _sw[2])
 
     # H1b: on the real benchmarks the claim is *equivalence*, not superiority
     real_eq = []
@@ -182,6 +193,7 @@ def main():
     h1 = dict(strata={"all": h1_all, "switch": h1_str, "control": h1_ctl,
                       "real": h1_real},
               dose_response=ladder_rows,
+              dose_response_monotone=_mono,
               passed=bool(h1_str and h1_str["passed"]),
               real_equivalence=h1b)
 
@@ -283,6 +295,12 @@ def main():
     json.dump(verdict, open(os.path.join(a.out, "verdict.json"), "w", encoding="utf-8"),
               indent=1, default=str)
 
+    # headline wording is derived from the ladder so it cannot drift from the data
+    _g = {r["rung"]: r["gain_pct_mean"] for r in ladder_rows}
+    _sw = [_g[k] for k in ("SW-2", "SW-4", "SW-X") if k in _g]
+    _sw_txt = ("+%.2f%% to +%.2f%%" % (min(_sw), max(_sw))) if _sw else "n/a"
+    _mono = bool(len(_sw) == 3 and _sw[0] <= _sw[1] <= _sw[2])
+
     L = ["# Results", "",
          "Every number below is produced by `scripts/run_stats.py` from the arrays",
          "written by `scripts/run_stream.py` and `scripts/run_synth.py`.  The",
@@ -309,8 +327,12 @@ def main():
          "  any causal method, yet the signal that would identify it is not",
          "  learnable from features observable before the day.",
          "* On streams whose data-generating process genuinely changes, the same",
-         "  architecture gains substantially, and the gain grows with the amount of",
-         "  genuine change (the ladder table below).", "",
+         "  architecture gains, but the gain is *modest* rather than large: "
+         f"{_sw_txt}",
+         "  over the three regime-switching rungs (SW-2 / SW-4 / SW-X).",
+         "  It does **not** increase monotonically as more sources are mixed, so",
+         "  we do not claim a dose-response from degree of change to gain; see the",
+         "  ladder table below for the per-seed spread.", "",
          "# Pre-registered verdicts", "",
          "| ID | statement | measured | threshold | verdict |", "|---|---|---|---|---|"]
     meas = {
@@ -339,10 +361,11 @@ def main():
                  f"{r['best_baseline_W']:.5f} | {r['gain_pct']:+.2f} | "
                  f"{r['headroom_captured_pct']:.1f} | {r['p_superiority_bh']:.2e} |")
     L += ["", "## Dose-response along the non-stationarity ladder", "",
-          "| rung | construction | mean gain % | median % | min % | max % |",
-          "|---|---|---|---|---|---|"]
+          "| rung | construction | n seeds | mean gain % | sd | median % | min % | max % |",
+          "|---|---|---|---|---|---|---|---|"]
     for r in ladder_rows:
-        L.append(f"| {r['rung']} | {r['label']} | {r['gain_pct_mean']:+.2f} | "
+        L.append(f"| {r['rung']} | {r['label']} | {r['n_seeds']} | "
+                 f"{r['gain_pct_mean']:+.2f} | {r['gain_pct_sd']:.2f} | "
                  f"{r['gain_pct_median']:+.2f} | {r['gain_pct_min']:+.2f} | "
                  f"{r['gain_pct_max']:+.2f} |")
     L += ["", "## Mechanism pricing (delta W vs the full architecture)", "",
