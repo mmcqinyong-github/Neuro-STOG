@@ -25,7 +25,16 @@ leaked pool the stress benchmarks showed gains of +17% to +77%.  After the pool
 was rebuilt with the growing-block protocol (`build_pool.py`, section 1 of the
 module docstring) the same benchmarks show the numbers in
 `results/summary/ladder.csv`.  **The large stress gains were an artefact of the
-leak and are withdrawn.**
+leak and are withdrawn.**  What remains is small: the three regime-switching
+rungs gain +1.47% to +3.94% on average, and the spread across the five
+architecture seeds now matters — the cross-family rung SW-X ranges from
+**-0.61% to +2.87%**, i.e. on one seed the architecture *loses* to the best
+baseline, and the splice control STAT-1 ranges from -2.24% to +0.39%.  The
+gain is therefore **not monotone** in the number of sources mixed, and no
+dose-response from degree of change to gain should be read off this table.
+(`run_stats.py` builds the ladder from the per-seed rows; an earlier revision
+aggregated the already-seed-averaged table, which forced `n_seeds=1` and
+`min=max=mean` and hid this spread entirely.)
 
 ## 2. Is the choice of expert learnable at all?
 
