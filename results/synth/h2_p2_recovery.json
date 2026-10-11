@@ -1,0 +1,252 @@
+[
+ {
+  "seed": 7,
+  "jump_scale": 0.25,
+  "n_breaks": 13,
+  "recovery_full": 33.38461538461539,
+  "recovery_noreset": 33.46153846153846,
+  "post_loss_full": 0.4202708885502751,
+  "post_loss_noreset": 0.4244475825017736,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 7,
+  "jump_scale": 0.5,
+  "n_breaks": 13,
+  "recovery_full": 33.0,
+  "recovery_noreset": 33.23076923076923,
+  "post_loss_full": 0.4155524115963747,
+  "post_loss_noreset": 0.42233520295727467,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 7,
+  "jump_scale": 1.0,
+  "n_breaks": 13,
+  "recovery_full": 35.07692307692308,
+  "recovery_noreset": 32.46153846153846,
+  "post_loss_full": 0.40207622466762516,
+  "post_loss_noreset": 0.41791346446475275,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 7,
+  "jump_scale": 2.0,
+  "n_breaks": 13,
+  "recovery_full": 35.38461538461539,
+  "recovery_noreset": 32.53846153846154,
+  "post_loss_full": 0.4018205452767021,
+  "post_loss_noreset": 0.42122695645911323,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 7,
+  "jump_scale": 4.0,
+  "n_breaks": 13,
+  "recovery_full": 35.53846153846154,
+  "recovery_noreset": 32.76923076923077,
+  "post_loss_full": 0.39994324938721487,
+  "post_loss_noreset": 0.41874182618379047,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 42,
+  "jump_scale": 0.25,
+  "n_breaks": 18,
+  "recovery_full": 35.5,
+  "recovery_noreset": 35.5,
+  "post_loss_full": 0.43884877561227564,
+  "post_loss_noreset": 0.43885563552408136,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 42,
+  "jump_scale": 0.5,
+  "n_breaks": 18,
+  "recovery_full": 35.5,
+  "recovery_noreset": 35.5,
+  "post_loss_full": 0.43842010190975084,
+  "post_loss_noreset": 0.43853104322150854,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 42,
+  "jump_scale": 1.0,
+  "n_breaks": 18,
+  "recovery_full": 35.55555555555556,
+  "recovery_noreset": 35.55555555555556,
+  "post_loss_full": 0.4384345441104357,
+  "post_loss_noreset": 0.4384345441104357,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 42,
+  "jump_scale": 2.0,
+  "n_breaks": 18,
+  "recovery_full": 35.5,
+  "recovery_noreset": 35.5,
+  "post_loss_full": 0.42663218552096777,
+  "post_loss_noreset": 0.43471300542046154,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 42,
+  "jump_scale": 4.0,
+  "n_breaks": 18,
+  "recovery_full": 37.166666666666664,
+  "recovery_noreset": 35.05555555555556,
+  "post_loss_full": 0.40239765733817706,
+  "post_loss_noreset": 0.428112043144969,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 2021,
+  "jump_scale": 0.25,
+  "n_breaks": 18,
+  "recovery_full": 30.72222222222222,
+  "recovery_noreset": 31.0,
+  "post_loss_full": 0.4565151585706718,
+  "post_loss_noreset": 0.45940239199472876,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 2021,
+  "jump_scale": 0.5,
+  "n_breaks": 18,
+  "recovery_full": 30.666666666666668,
+  "recovery_noreset": 30.72222222222222,
+  "post_loss_full": 0.45401116583542894,
+  "post_loss_noreset": 0.45509562183079333,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 2021,
+  "jump_scale": 1.0,
+  "n_breaks": 18,
+  "recovery_full": 31.0,
+  "recovery_noreset": 30.61111111111111,
+  "post_loss_full": 0.4417036365711717,
+  "post_loss_noreset": 0.4485097186079801,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 2021,
+  "jump_scale": 2.0,
+  "n_breaks": 18,
+  "recovery_full": 32.27777777777778,
+  "recovery_noreset": 30.555555555555557,
+  "post_loss_full": 0.4123424890584059,
+  "post_loss_noreset": 0.4447712548857628,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 2021,
+  "jump_scale": 4.0,
+  "n_breaks": 18,
+  "recovery_full": 32.44444444444444,
+  "recovery_noreset": 30.22222222222222,
+  "post_loss_full": 0.41079479742057423,
+  "post_loss_noreset": 0.4452413341956507,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 3407,
+  "jump_scale": 0.25,
+  "n_breaks": 18,
+  "recovery_full": 35.166666666666664,
+  "recovery_noreset": 35.166666666666664,
+  "post_loss_full": 0.46787891382878133,
+  "post_loss_noreset": 0.4680418248490483,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 3407,
+  "jump_scale": 0.5,
+  "n_breaks": 18,
+  "recovery_full": 35.27777777777778,
+  "recovery_noreset": 35.27777777777778,
+  "post_loss_full": 0.46384533585932947,
+  "post_loss_noreset": 0.466173764408522,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 3407,
+  "jump_scale": 1.0,
+  "n_breaks": 18,
+  "recovery_full": 36.111111111111114,
+  "recovery_noreset": 35.72222222222222,
+  "post_loss_full": 0.45366214290554413,
+  "post_loss_noreset": 0.4634972665595145,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 3407,
+  "jump_scale": 2.0,
+  "n_breaks": 18,
+  "recovery_full": 36.0,
+  "recovery_noreset": 35.611111111111114,
+  "post_loss_full": 0.43867578899592996,
+  "post_loss_noreset": 0.4582130425135267,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 3407,
+  "jump_scale": 4.0,
+  "n_breaks": 18,
+  "recovery_full": 37.333333333333336,
+  "recovery_noreset": 35.55555555555556,
+  "post_loss_full": 0.40758104905888143,
+  "post_loss_noreset": 0.45094450528540897,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 12345,
+  "jump_scale": 0.25,
+  "n_breaks": 19,
+  "recovery_full": 36.78947368421053,
+  "recovery_noreset": 36.473684210526315,
+  "post_loss_full": 0.4468378623954603,
+  "post_loss_noreset": 0.4470164431838691,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 12345,
+  "jump_scale": 0.5,
+  "n_breaks": 19,
+  "recovery_full": 36.36842105263158,
+  "recovery_noreset": 36.31578947368421,
+  "post_loss_full": 0.4427168672360862,
+  "post_loss_noreset": 0.44411574149123123,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 12345,
+  "jump_scale": 1.0,
+  "n_breaks": 19,
+  "recovery_full": 36.578947368421055,
+  "recovery_noreset": 36.526315789473685,
+  "post_loss_full": 0.43441495634796573,
+  "post_loss_noreset": 0.44136889806030877,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 12345,
+  "jump_scale": 2.0,
+  "n_breaks": 19,
+  "recovery_full": 36.36842105263158,
+  "recovery_noreset": 36.36842105263158,
+  "post_loss_full": 0.42071331153545505,
+  "post_loss_noreset": 0.433307941218888,
+  "frac_reset_at_break": 0.0
+ },
+ {
+  "seed": 12345,
+  "jump_scale": 4.0,
+  "n_breaks": 19,
+  "recovery_full": 37.73684210526316,
+  "recovery_noreset": 36.473684210526315,
+  "post_loss_full": 0.4041582236414614,
+  "post_loss_noreset": 0.4268391866629128,
+  "frac_reset_at_break": 0.0
+ }
+]

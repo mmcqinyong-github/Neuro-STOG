@@ -1,0 +1,6 @@
+numpy>=2.0
+scipy>=1.11
+scikit-learn>=1.5
+matplotlib>=3.8
+statsmodels>=0.14
+tqdm>=4.66
