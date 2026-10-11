@@ -20,7 +20,14 @@ CONFIRM_SEEDS: List[int] = [7, 12345]
 # ----------------------------------------------------------------------------
 # Protocol
 # ----------------------------------------------------------------------------
-SPLIT = (0.7, 0.1, 0.2)          # chronological train / validation / test
+# NOTE: the split actually used by the pipeline is the four-stage growing-block
+# protocol in scripts/build_pool.py:
+#     fit 55% | warm 10% | val 10% | test 25%
+# It replaced the former three-stage 0.7/0.1/0.2 constant below, which was left
+# here unused and had become a misleading "text says one thing, code does
+# another" artefact (review item B3/C11).  It is kept only as a documented
+# historical value, never read.
+LEGACY_SPLIT_UNUSED = (0.7, 0.1, 0.2)
 LOOKBACK_DAYS = 7                # window length = 7 days
 SEASON_DAYS = 7                  # weekly seasonal lags retained
 
@@ -157,7 +164,13 @@ def default_arms() -> List[Ablation]:
         Ablation("P2_random_replay", placebo="replay",
                  description="replay samples uniformly instead of by priority"),
         Ablation("P3_shuffled_responsibility", placebo="responsibility",
-                 description="lambda permuted across experts each day"),
+                 description="lambda permuted across experts each day, BEFORE the "
+                             "mixture: prices 'sound mix vs random mix' (engine "
+                             "evidence), not the responsibility ordering"),
+        Ablation("P3b_shuffled_credit", placebo="responsibility_learn",
+                 description="fusion weights left intact; only the lambda that "
+                             "carries credit into the replay path is permuted -- "
+                             "the clean placebo for the responsibility ordering"),
         Ablation("P4_random_growth", placebo="growth",
                  description="cluster growth fires at random days"),
     ]
@@ -169,10 +182,18 @@ def default_arms() -> List[Ablation]:
 # ----------------------------------------------------------------------------
 PREREG = {
     "H1_main_gain_pct": 8.0,       # >= 8% cumulative MSE gain vs best baseline
+    "H1a_domains": ("EPF-NP", "EPF-PJM", "EPF-BE", "EPF-FR", "EPF-DE"),
     "H2_recovery_days": 10.0,      # <= 10 days to recover after a break
     "H3_universality_pct": 5.0,    # median relative degradation <= 5%
     "H4_detect_macro_f1": 0.70,    # three-tier vs truth, macro F1
-    "H5_pricing_modules": 6,       # >= 6/9 modules priced significantly > 0
+    # H5 denominator: 11 module ablations are run (A1..A11); A1 is a *feature*
+    # ablation and is reported separately, so the module count is 10 while the
+    # pre-registered 6-of-9 threshold is kept verbatim for the record.  Both are
+    # reported (review item C11/24: the arm count changed without revisiting the
+    # threshold -- v2 reports both readings side by side).
+    "H5_pricing_modules": 6,
+    "H5_denominator_arms": 11,
+    "H5_denominator_module_arms": 10,
     "H6_onboard_days": 30.0,
     "H7_cost_fraction": 0.10,      # incremental compute < 10% of monthly retrain
     "equivalence_margin_pct": 1.0,  # TOST margin = 1% of reference MSE

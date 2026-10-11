@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "src"))
 from cerebrocast.baselines import (  # noqa: E402
     B1Frozen, B2MonthlyRetrain, B3FFORMA, B4Hedge, B5BestExpert, B6ADWIN,
     B7OnlineMeta, _simplex_fit)
-from cerebrocast.config import SEEDS, SystemConfig, default_arms  # noqa: E402
+from cerebrocast.config import SEEDS, SystemConfig, Ablation, default_arms  # noqa: E402
 from cerebrocast.data import ALL_ORDER  # noqa: E402
 from cerebrocast.fingerprints import Fingerprint  # noqa: E402
 from cerebrocast.memory import ClusterField  # noqa: E402
@@ -49,6 +49,13 @@ from cerebrocast.system import CerebroCast  # noqa: E402
 
 POOL = os.path.join(os.path.dirname(__file__), "..", "results", "pool")
 OUT = os.path.join(os.path.dirname(__file__), "..", "results", "stream")
+
+# The bare engine (L0): every brain module switched off, leaving only the
+# difficulty-normalised, recency-weighted, population-level simplex least squares
+# read-out.  This is baseline B8 -- see the note in the baseline block below.
+L0_BASE = dict(no_clusters=True, no_detect=True, no_forward=True,
+               no_three_factor=True, no_astro=True, no_replay=True,
+               no_downscale=True, no_growth=True, no_episodic=True)
 
 
 def _new_field(cfg: SystemConfig, PHI_tr: np.ndarray, M: int, seed: int) -> ClusterField:
@@ -263,6 +270,49 @@ def run_one(domain: str, seed: int, pool_dir: str, out_dir: str,
         if m < best_m7:
             best_e7, best_m7 = e, m
     b7 = bl_val_test(B7OnlineMeta(M, p, eta=best_e7))
+
+    # ---------------- B8: the architecture's own engine, bare --------------
+    # Review item C7/20.  The diagnostics found that the strongest *classical*
+    # causal combiner was recency-weighted, difficulty-normalised simplex LS --
+    # which is exactly the architecture's own consolidation engine (L0) -- yet
+    # B1-B7 did not contain it.  Every "architecture vs best baseline" gain
+    # therefore conflated the engine with the brain modules.  B8 is that engine
+    # with every module switched off, calibrated on the validation split under
+    # the same protocol, which yields a clean attribution split:
+    #     engine contribution = B8       vs best of B1..B7
+    #     module contribution = FULL     vs B8
+    armE = Ablation("B8_rwls_engine", **L0_BASE)
+    cfgE0 = dc_replace(cfg0, eta=0.0, beta_forward=0.0, topk=0,
+                       adapt_forget_boost=1.0, reset_forget_boost=1.0, gamma0=0.0)
+    bestE = (np.inf, None)
+    for hl in (3.0, 5.0, 7.0, 10.0, 15.0, 20.0, 30.0):
+        for su in (0.0, 0.15, 0.35):
+            c = dc_replace(cfgE0, recall_halflife=hl, consol_shrink_u=su)
+            m = val_W(c, arm=armE)
+            trace.append(dict(stage="B8", value=(hl, su), w=m))
+            if m < bestE[0]:
+                bestE = (m, c)
+    cfgE = bestE[1] if bestE[1] is not None else cfgE0
+    t1 = time.time()
+    sE = _make_system(cfgE, armE, PHI[tr], M, seed, p)
+    sE.restore(snap)
+    _run_days(sE, va, PHI, P, Y, record=False)
+    teE = _run_days(sE, te, PHI, P, Y, record=True)
+    rtE = time.time() - t1
+    res["arms"]["B8_rwls_engine"] = dict(
+        loss=np.array([d["loss_raw"] for d in teE]),
+        lm=np.array([d["lm"] for d in teE]),
+        lam=np.array([d["lam"] for d in teE]),
+        tier=np.array([d["tier"] for d in teE]),
+        reset=np.array([d["reset"] for d in teE], dtype=int),
+        n_clusters=np.array([d["n_clusters"] for d in teE]),
+        entropy=np.array([d["entropy"] for d in teE]),
+        top1=np.array([d["top1"] for d in teE]),
+        runtime_s=float(rtE),
+        sec_per_day=float(rtE / max(1, len(va) + len(te))),
+        calibrated=dict(recall_halflife=cfgE.recall_halflife,
+                        consol_shrink_u=cfgE.consol_shrink_u, val_W=bestE[0]),
+        description="bare recency-weighted difficulty-normalised simplex LS (L0)")
 
     extras = {"B4_hedge": best_eta, "B7_online_meta": best_e7}
     for name, obj in [("B1_frozen_static", b1), ("B2_monthly_retrain", b2),

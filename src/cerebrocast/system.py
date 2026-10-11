@@ -93,9 +93,21 @@ class CerebroCast:
     def __init__(self, M: int, cfg: SystemConfig, arm: Ablation,
                  field: ClusterField, fp_dim: int, seed: int = 0,
                  placebo_reset_rate: float = 0.0,
-                 placebo_growth_rate: float = 0.0):
+                 placebo_growth_rate: float = 0.0,
+                 avail: Optional[np.ndarray] = None,
+                 release_at: Optional[Dict[int, List[int]]] = None):
         self.M = M
         self.cfg = cfg
+        # (H6) expert onboarding.  `avail` marks the experts the system may use
+        # *now*; `release_at` maps a calendar day to the experts that become
+        # available that morning.  With the default (all True, no schedule) every
+        # branch below takes the same path as before, so the main experiment is
+        # bit-identical.
+        self.avail = (np.ones(M, dtype=bool) if avail is None
+                      else np.asarray(avail, dtype=bool).copy())
+        self.release_at: Dict[int, List[int]] = {
+            int(k): list(v) for k, v in (release_at or {}).items()}
+        self.released_log: List[int] = []
         self.arm = arm
         self.field = field
         self.rng = np.random.default_rng(seed)
@@ -157,6 +169,26 @@ class CerebroCast:
         self.calib: List[np.ndarray] = []
         self.last_forget = 1.0
 
+    # -- (H6) expert onboarding ---------------------------------------------
+    def _release_due(self, t: int):
+        """Make any expert whose scheduled release day has arrived usable today."""
+        if not self.release_at:
+            return
+        due = [d for d in self.release_at if d <= t]
+        for d in sorted(due):
+            for m in self.release_at.pop(d):
+                if 0 <= int(m) < self.M:
+                    self.avail[int(m)] = True
+                    self.released_log.append(int(m))
+
+    def _mask(self, v: np.ndarray) -> np.ndarray:
+        """Zero the weights of experts that have not been released yet."""
+        u = np.where(self.avail, v, 0.0)
+        s = float(u.sum())
+        if s > 1e-12:
+            return u / s
+        return self.avail.astype(float) / max(1, int(self.avail.sum()))
+
     # -- bookkeeping for a changing cluster field ---------------------------
     def _resize_stats(self, C: int):
         M = self.M
@@ -191,6 +223,7 @@ class CerebroCast:
             LAM=self.LAM.copy(), ema7=None if self.ema7 is None else self.ema7.copy(),
             ema28=None if self.ema28 is None else self.ema28.copy(),
             seen=self.seen, cap=self.cap, lscale=self.lscale,
+            avail=self.avail.copy(),
         )
 
     def restore(self, s: Dict):
@@ -224,6 +257,8 @@ class CerebroCast:
         self.ema7 = None if s["ema7"] is None else s["ema7"].copy()
         self.ema28 = None if s["ema28"] is None else s["ema28"].copy()
         self.seen = s["seen"]; self.cap = s["cap"]; self.lscale = s["lscale"]
+        if "avail" in s:
+            self.avail = s["avail"].copy()
 
     # -- (4) change detection + thalamic gating -----------------------------
     def _detect(self, phi: np.ndarray) -> Dict:
@@ -305,6 +340,7 @@ class CerebroCast:
         if self.LAM.shape[0] != C:
             self._resize_stats(C)
 
+        self._release_due(t)
         det = self._detect(phi)
         tier = det["tier"]
 
@@ -345,9 +381,26 @@ class CerebroCast:
         logit = np.log(np.clip(lam_slow, 1e-6, None)) + pi @ self.field.W
         lam_raw = _softmax(logit / temp) * np.exp(np.clip(g, -8, 8))
         if arm.placebo == "responsibility":
+            # P3 (original): permute the weights *before* the mixture, which makes
+            # the daily forecast a random combination.  This prices the quality of
+            # the mix, NOT the information in the credit assignment (see P3b).
             lam_raw = lam_raw[self.rng.permutation(M)]
         eps_expl = 0.05 if t <= self.reset_until else 0.02
         lam = _topk_normalize(lam_raw, cfg.topk if cfg.topk < M else None, eps_expl)
+
+        # ---- the *correct* responsibility placebo (P3b)
+        # Keep the fusion weights exactly as they are -- the forecast is unchanged --
+        # and permute only the copy of lambda that carries credit into the replay
+        # path.  The arm therefore isolates the information content of the
+        # responsibility *ordering* from the quality of the mixture itself.
+        lam_learn = lam
+        if arm.placebo == "responsibility_learn":
+            lam_learn = lam[self.rng.permutation(M)]
+        if not self.avail.all():
+            # (H6) an unreleased expert contributes nothing to the mixture nor to
+            # the credit that trains the mixture.
+            lam = self._mask(lam)
+            lam_learn = self._mask(lam_learn)
 
         # ---- prediction and losses
         yhat = lam @ P
@@ -382,7 +435,9 @@ class CerebroCast:
             self._reset(t, cfg.reset_forget_boost)
 
         # ---- credit: negative loss in level-normalised units
-        lbar = float(lam @ lm_c)
+        # `lam_learn` is a permutation of the fusion weights only under P3b; in every
+        # other arm it *is* the fusion weight vector.
+        lbar = float(lam_learn @ lm_c)
         self.lscale = 0.99 * self.lscale + 0.01 * float(np.mean(lm_c)) if self.seen > 1 \
             else float(np.mean(lm_c))
         adv = np.clip(-(lm_c / (self.lscale + 1e-9)) + 1.0, -5.0, 5.0)
@@ -428,15 +483,19 @@ class CerebroCast:
         boost_f = self._forget_boost(tier)
         rho_c = 0.5 ** (boost_f / max(cfg.recall_halflife, 1e-6))
         self.last_forget = rho_c
-        self.G = rho_c * self.G + (pi * wt)[:, None, None] * (P @ P.T)[None, :, :]
-        self.hh = rho_c * self.hh + (pi * wt)[:, None] * (P @ y)
+        # (H6) an expert that has not been released yet must not have accumulated
+        # history waiting for it, otherwise onboarding would be free.
+        Pm = P if self.avail.all() else P * self.avail[:, None]
+        self.G = rho_c * self.G + (pi * wt)[:, None, None] * (Pm @ Pm.T)[None, :, :]
+        self.hh = rho_c * self.hh + (pi * wt)[:, None] * (Pm @ y)
         self.gn = rho_c * self.gn + pi * wt
-        self.Gg = rho_c * self.Gg + wt * (P @ P.T)
-        self.hg = rho_c * self.hg + wt * (P @ y)
+        self.Gg = rho_c * self.Gg + wt * (Pm @ Pm.T)
+        self.hg = rho_c * self.hg + wt * (Pm @ y)
         self.gng = rho_c * self.gng + wt
 
         # ---- bookkeeping for the sleep phase
-        self.buffer.append(dict(t=t, phi=phi.copy(), lm=lm_c.copy(), lam=lam.copy(),
+        self.buffer.append(dict(t=t, phi=phi.copy(), lm=lm_c.copy(),
+                                lam=lam_learn.copy(),
                                 c=int(np.argmax(pi)), adv=adv.copy(), gain=gain,
                                 tier=tier, wt=wt))
         if len(self.buffer) > self.buffer_cap:
@@ -456,6 +515,7 @@ class CerebroCast:
         return dict(
             t=t, loss=loss_c, loss_raw=loss, tier=tier, delta=det["delta"], z=det["z"],
             lam=lam.copy(), pi=pi.copy(), n_clusters=C,
+            n_avail=int(self.avail.sum()),
             entropy=float(-(np.where(lam > 0, lam, 1) * np.log(np.where(lam > 0, lam, 1))).sum()),
             top1=float(lam.max()), lbar=lbar, best_expert=float(lm_c.min()),
             oracle=float(lm_c.min()), fhat=fhat.copy(), lm=lm_c.copy(),
@@ -503,15 +563,32 @@ class CerebroCast:
         # (9a) reconsolidation: re-estimate every cluster's combination from its
         # own difficulty-normalised, recency-weighted second moments.
         n_cons = 0
-        lam_g = simplex_ls(self.Gg, self.hg, cfg.consol_ridge,
-                           cfg.consol_shrink_u) if self.gng > 1e-8 else None
+        avail_all = bool(self.avail.all())
+        idxv = None if avail_all else np.where(self.avail)[0]
+        uni = np.full(M, 1.0 / M) if avail_all else \
+            self.avail.astype(float) / max(1, int(self.avail.sum()))
+
+        def _solve(G: np.ndarray, h: np.ndarray, shrink_u: float = 0.0):
+            """Simplex LS over the released experts only, scattered back to M."""
+            if avail_all:
+                return simplex_ls(G, h, cfg.consol_ridge, shrink_u)
+            sub = simplex_ls(G[np.ix_(idxv, idxv)], h[idxv],
+                             cfg.consol_ridge, shrink_u)
+            if sub is None:
+                return None
+            full = np.zeros(M)
+            full[idxv] = sub
+            return full
+
+        lam_g = _solve(self.Gg, self.hg, cfg.consol_shrink_u) \
+            if self.gng > 1e-8 else None
         for c in range(C):
             if self.gn[c] < 1e-8:
-                self.LAM[c] = lam_g if lam_g is not None else np.full(M, 1.0 / M)
+                self.LAM[c] = lam_g if lam_g is not None else uni
                 continue
-            lam_c = simplex_ls(self.G[c], self.hh[c], cfg.consol_ridge)
+            lam_c = _solve(self.G[c], self.hh[c])
             if lam_c is None:
-                self.LAM[c] = lam_g if lam_g is not None else np.full(M, 1.0 / M)
+                self.LAM[c] = lam_g if lam_g is not None else uni
                 continue
             if lam_g is not None and not arm.no_clusters:
                 xi = self.gn[c] / (self.gn[c] + cfg.consol_shrink * self.gng + 1e-12)
@@ -520,7 +597,7 @@ class CerebroCast:
             n_cons += 1
         if arm.no_clusters:
             # module (3) off: one shared combination for the whole population
-            base = lam_g if lam_g is not None else np.full(M, 1.0 / M)
+            base = lam_g if lam_g is not None else uni
             self.LAM[:] = base
             n_cons = 1
         elif lam_g is not None:

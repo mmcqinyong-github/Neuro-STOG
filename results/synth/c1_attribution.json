@@ -1,0 +1,43 @@
+{
+ "n_streams": 80,
+ "n_domains": 16,
+ "features": [
+  "mean_delta_z",
+  "frac_adapt",
+  "frac_hold",
+  "frac_reset",
+  "fp_drift",
+  "difficulty_iqr",
+  "noise_floor",
+  "pool_median"
+ ],
+ "threshold": 0.6,
+ "groups": {
+  "detection": {
+   "r2_out_of_sample": -0.3466924434794716,
+   "n": 80,
+   "mean_cost_pct": 0.6972161933961433
+  },
+  "identification": {
+   "r2_out_of_sample": -1.0757271102700954,
+   "n": 80,
+   "mean_cost_pct": -0.03800667569918578
+  },
+  "adaptation": {
+   "r2_out_of_sample": -0.0913305737671053,
+   "n": 80,
+   "mean_cost_pct": 0.17200174241163985
+  },
+  "maintenance": {
+   "r2_out_of_sample": -0.49627612632027995,
+   "n": 80,
+   "mean_cost_pct": -0.021583349221115083
+  }
+ },
+ "pooled": {
+  "r2_out_of_sample": -0.03401858430678395,
+  "n": 320
+ },
+ "supported": false,
+ "verdict": "not supported: at least one mechanism group is not predictable from observable environment statistics"
+}

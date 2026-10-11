@@ -4,44 +4,55 @@
    "all": {
     "stratum": "all",
     "n_domains": 16,
-    "gain_pct_mean": 0.37409161898444926,
-    "gain_pct_median": -0.0023450987670125545,
-    "gain_pct_min": -4.870932936114193,
-    "gain_pct_max": 6.037843301719677,
-    "n_significant": 6,
+    "gain_pct_mean": -6.186427579871562,
+    "gain_pct_median": -3.2671304539662307,
+    "gain_pct_min": -36.83750614743598,
+    "gain_pct_max": 2.2076298951350477,
+    "n_significant": 0,
+    "threshold": 8.0,
+    "passed": false
+   },
+   "H1a_epf": {
+    "stratum": "EPF five markets (pre-registered main test)",
+    "n_domains": 5,
+    "gain_pct_mean": -2.910942474781236,
+    "gain_pct_median": -3.2552698853121185,
+    "gain_pct_min": -5.543651813613211,
+    "gain_pct_max": 1.094056072502913,
+    "n_significant": 0,
     "threshold": 8.0,
     "passed": false
    },
    "switch": {
     "stratum": "multi-source regime switching",
     "n_domains": 3,
-    "gain_pct_mean": 2.426180724505109,
-    "gain_pct_median": 1.8650487372127789,
-    "gain_pct_min": 1.4697870282838912,
-    "gain_pct_max": 3.9437064080186564,
-    "n_significant": 2,
+    "gain_pct_mean": -5.8307193612263974,
+    "gain_pct_median": -7.157179768132978,
+    "gain_pct_min": -8.534165370292623,
+    "gain_pct_max": -1.8008129452535913,
+    "n_significant": 0,
     "threshold": 8.0,
     "passed": false
    },
    "control": {
     "stratum": "splicing / stationarity controls",
     "n_domains": 2,
-    "gain_pct_mean": 0.014818171399174851,
-    "gain_pct_median": 0.014818171399174851,
-    "gain_pct_min": -0.8319814106608143,
-    "gain_pct_max": 0.861617753459164,
-    "n_significant": 1,
+    "gain_pct_mean": -19.477981257882497,
+    "gain_pct_median": -19.477981257882497,
+    "gain_pct_min": -36.83750614743598,
+    "gain_pct_max": -2.1184563683290136,
+    "n_significant": 0,
     "threshold": 8.0,
     "passed": false
    },
    "real": {
     "stratum": "real benchmarks",
     "n_domains": 11,
-    "gain_pct_mean": -0.12024660114204418,
-    "gain_pct_median": -1.2500423130390401,
-    "gain_pct_min": -4.870932936114193,
-    "gain_pct_max": 6.037843301719677,
-    "n_significant": 3,
+    "gain_pct_mean": -3.8667927889546196,
+    "gain_pct_median": -3.2552698853121185,
+    "gain_pct_min": -12.635372953890005,
+    "gain_pct_max": 2.2076298951350477,
+    "n_significant": 0,
     "threshold": 8.0,
     "passed": false
    }
@@ -50,96 +61,241 @@
    {
     "rung": "STAT-0",
     "label": "contiguous single series (stationary control)",
-    "n_seeds": 5,
-    "gain_pct_mean": 0.8616177534591618,
-    "gain_pct_sd": 0.18385116571464552,
-    "gain_pct_median": 0.9420610254207059,
-    "gain_pct_min": 0.6267403410679844,
-    "gain_pct_max": 1.065779589050036
+    "n_domains": 5,
+    "gain_pct_mean": -0.12705484799538483,
+    "gain_pct_sd": 0.18589315502930712,
+    "gain_pct_median": -0.042646434008439885,
+    "gain_pct_min": -0.3660558721492112,
+    "gain_pct_max": 0.0764109563425394,
+    "boot_est": -2.1184563683290136
    },
    {
     "rung": "STAT-1",
     "label": "same series, spliced windows (splice control)",
-    "n_seeds": 5,
-    "gain_pct_mean": -0.8319814106608234,
-    "gain_pct_sd": 0.952777935866756,
-    "gain_pct_median": -0.7108884894803071,
-    "gain_pct_min": -2.238057350837383,
-    "gain_pct_max": 0.38985781106577666
+    "n_domains": 5,
+    "gain_pct_mean": -1.432528247078466,
+    "gain_pct_sd": 0.9568552955754196,
+    "gain_pct_median": -1.311285249237733,
+    "gain_pct_min": -2.8424950370591175,
+    "gain_pct_max": -0.202315079779541,
+    "boot_est": -36.83750614743598
    },
    {
     "rung": "SW-2",
     "label": "two series, same family",
-    "n_seeds": 5,
-    "gain_pct_mean": 3.9437064080186524,
-    "gain_pct_sd": 0.18719401410646977,
-    "gain_pct_median": 3.9974113010297336,
-    "gain_pct_min": 3.7570139625572057,
-    "gain_pct_max": 4.2004703413409645
+    "n_domains": 5,
+    "gain_pct_mean": -0.7188182995745438,
+    "gain_pct_sd": 0.18921615548141577,
+    "gain_pct_median": -0.681018681085125,
+    "gain_pct_min": -0.9051302203552559,
+    "gain_pct_max": -0.4421424603793243,
+    "boot_est": -8.534165370292623
    },
    {
     "rung": "SW-4",
     "label": "four series, same family",
-    "n_seeds": 5,
-    "gain_pct_mean": 1.8650487372127784,
-    "gain_pct_sd": 0.28363949552833156,
-    "gain_pct_median": 1.926567745520272,
-    "gain_pct_min": 1.3898367649610577,
-    "gain_pct_max": 2.1554091872645444
+    "n_domains": 5,
+    "gain_pct_mean": 1.1739120569567951,
+    "gain_pct_sd": 0.28622201555611665,
+    "gain_pct_median": 1.2323125183394688,
+    "gain_pct_min": 0.6942622805101774,
+    "gain_pct_max": 1.4669979580742585,
+    "boot_est": -1.8008129452535913
    },
    {
     "rung": "SW-X",
     "label": "three series, different families",
-    "n_seeds": 5,
-    "gain_pct_mean": 1.4697870282838628,
-    "gain_pct_sd": 1.4376368113864504,
-    "gain_pct_median": 2.1369553072555303,
-    "gain_pct_min": -0.6144511753761763,
-    "gain_pct_max": 2.8672729539872805
+    "n_domains": 5,
+    "gain_pct_mean": -3.5001488156378286,
+    "gain_pct_sd": 1.5151642781022026,
+    "gain_pct_median": -2.7881339527896225,
+    "gain_pct_min": -5.698326613546575,
+    "gain_pct_max": -2.030284499581176,
+    "boot_est": -7.157179768132978
    }
   ],
   "dose_response_monotone": false,
+  "H1a_passed": false,
+  "H1b_stress_passed": false,
   "passed": false,
   "real_equivalence": {
    "n_domains": 11,
    "n_equivalent": 0,
-   "gain_pct_median": -1.2500423130390401,
+   "gain_pct_median": -3.2552698853121185,
    "threshold": 8.0,
    "passed": true
   }
  },
  "H2": {
-  "recovery_full_days": 34.89795771479982,
-  "recovery_noreset_days": 34.16699955015745,
+  "recovery_full_days": 24.033047619047622,
+  "recovery_noreset_days": 25.093428571428568,
+  "recovery_full_days_legacy_definition": 35.46609523809524,
+  "metric": "pre-registered: days to recover to 90% of the post-break oracle gap",
+  "frac_reset_at_break_mean": 0.0,
+  "p2_evidence": "insufficient -- RESET does not fire on the annotated break days, so this grid cannot price P2 (see SI-B / FINDINGS)",
   "threshold": 10.0,
   "passed": false
  },
  "H3": {
-  "median_degradation_pct": 0.0023450987670125545,
-  "worst_domain": "EPF-DE",
-  "worst_degradation_pct": 4.870932936114193,
+  "median_degradation_pct": 3.2552698853121185,
+  "median_degradation_pct_all16": 3.2671304539662307,
+  "worst_domain": "STAT-1",
+  "worst_degradation_pct": 36.83750614743598,
+  "n_domains": 11,
+  "scope": "11 real domains (pre-registered)",
   "threshold": 5.0,
   "passed": true
  },
  "H4": {
-  "macro_f1_mean": 0.13726148486798045,
-  "macro_f1_median": 0.12096074240714189,
-  "n_configs": 36,
+  "macro_f1_mean": 0.19780661396355642,
+  "macro_f1_median": 0.223358903912391,
+  "n_configs": 60,
+  "by_p_switch": {
+   "0.001": {
+    "n": 12,
+    "macro_f1_mean": 0.2842183149283317
+   },
+   "0.005": {
+    "n": 12,
+    "macro_f1_mean": 0.2890948120915155
+   },
+   "0.02": {
+    "n": 12,
+    "macro_f1_mean": 0.22279317298940615
+   },
+   "0.05": {
+    "n": 12,
+    "macro_f1_mean": 0.11552035396940573
+   },
+   "0.1": {
+    "n": 12,
+    "macro_f1_mean": 0.07740641583912293
+   }
+  },
+  "label_noise_note": "truth labels are decision-theoretic oracle labels (argmin of the 5-day-forward mean loss of three forced arms); class-imbalanced, so the reading mixes detector and label error",
   "threshold": 0.7,
   "passed": false
  },
  "H5": {
   "modules_significant": 0,
+  "modules_significant_ex_A1": 0,
   "threshold": 6,
-  "placebo_arms": 4,
+  "denominator_arms": 11,
+  "denominator_module_arms": 10,
+  "denominator_note": "pre-registered threshold was 6/9; the study ran 11 ablations (A1 is a feature ablation) -- both readings are reported",
+  "placebo_arms": 5,
   "placebo_significant": 1,
+  "pooling": "per-domain normalised (delta W / W_FULL); raw-scale pooling is reported alongside and is known to be scale-confounded",
+  "passed": false
+ },
+ "H6": {
+  "n_events": 240,
+  "days_to_top5_mean": 67.12925170068027,
+  "frac_converged": 0.20833333333333334,
+  "threshold": 30.0,
+  "note": "a released expert counts as converged if it enters the post-hoc top-5 responsibility ranking within 30 days of release",
   "passed": false
  },
  "H7": {
-  "full_sec_per_day": 0.001838300918512121,
-  "monthly_retrain_sec_per_day": 8.493103307015559e-05,
-  "ratio": 21.64463155644921,
+  "routing_sec_per_day": 0.0030646719665942774,
+  "monthly_retrain_routing_sec_per_day": 0.00017722349749578633,
+  "engine_sec_per_day": 0.0014898658153994298,
+  "ratio_vs_monthly_routing": 17.292695437675487,
+  "ratio_vs_engine": 2.05701207109893,
   "threshold": 0.1,
+  "operationalisation": "routing-layer wall clock only; the pre-registered intent (incremental compute incl. per-expert retraining amortisation) is NOT measurable from the current instrumentation -- reported as a deviation, see SI-B D14",
   "passed": false
+ },
+ "confirmation_seeds": {
+  "seeds": [
+   7,
+   12345
+  ],
+  "n_epf": 10,
+  "epf_gain_pct_median": -2.974934566364463,
+  "real_gain_pct_median": -2.3228490675411018,
+  "note": "exploration seeds {42,2021,3407} are excluded here; the main verdicts are also re-stated on this subset"
+ },
+ "C1_attribution": {
+  "n_streams": 80,
+  "n_domains": 16,
+  "features": [
+   "mean_delta_z",
+   "frac_adapt",
+   "frac_hold",
+   "frac_reset",
+   "fp_drift",
+   "difficulty_iqr",
+   "noise_floor",
+   "pool_median"
+  ],
+  "threshold": 0.6,
+  "groups": {
+   "detection": {
+    "r2_out_of_sample": -0.3466924434794716,
+    "n": 80,
+    "mean_cost_pct": 0.6972161933961433
+   },
+   "identification": {
+    "r2_out_of_sample": -1.0757271102700954,
+    "n": 80,
+    "mean_cost_pct": -0.03800667569918578
+   },
+   "adaptation": {
+    "r2_out_of_sample": -0.0913305737671053,
+    "n": 80,
+    "mean_cost_pct": 0.17200174241163985
+   },
+   "maintenance": {
+    "r2_out_of_sample": -0.49627612632027995,
+    "n": 80,
+    "mean_cost_pct": -0.021583349221115083
+   }
+  },
+  "pooled": {
+   "r2_out_of_sample": -0.03401858430678395,
+   "n": 320
+  },
+  "supported": false,
+  "verdict": "not supported: at least one mechanism group is not predictable from observable environment statistics"
+ },
+ "protocol": {
+  "endpoint": "W = mean_t min(loss_t, cap_t)",
+  "bootstrap": "day-level paired block bootstrap, block=7 days, 2000 resamples",
+  "arms": {
+   "ablations": [
+    "A1_no_spectral",
+    "A2_no_episodic",
+    "A3_no_clusters",
+    "A4_no_change_detection",
+    "A5_no_reset",
+    "A6_no_forward_model",
+    "A7_no_three_factor",
+    "A8_no_metaplasticity",
+    "A9_no_replay",
+    "A10_no_downscaling",
+    "A11_no_growth"
+   ],
+   "placebos": [
+    "P1_random_reset",
+    "P2_random_replay",
+    "P3_shuffled_responsibility",
+    "P3b_shuffled_credit",
+    "P4_random_growth"
+   ],
+   "baselines_classic": [
+    "B1_frozen_static",
+    "B2_monthly_retrain",
+    "B3_fforma",
+    "B4_hedge",
+    "B5_best_expert",
+    "B6_adwin_retrain",
+    "B7_online_meta"
+   ],
+   "baseline_engine": "B8_rwls_engine",
+   "engine_arms": [
+    "P3_shuffled_responsibility"
+   ]
+  }
  }
 }

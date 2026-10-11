@@ -41,6 +41,7 @@ PALETTE = {
     "neutral_light": "#CFCECE", "neutral_mid": "#767676",
     "neutral_dark": "#4D4D4D", "neutral_black": "#272727",
     "teal": "#42949E", "violet": "#9A4D8E", "gold": "#FFD700",
+    "orange": "#C1663A",
 }
 NMI = {
     "baseline_dark": "#484878", "baseline_mid": "#7884B4",
@@ -241,7 +242,8 @@ def fig2(D, domain="EPF-NP", seed=7):
 # ---------------------------------------------------------------------------
 def fig3(D, domains):
     base_order = ["B1_frozen_static", "B2_monthly_retrain", "B4_hedge",
-                  "B6_adwin_retrain", "B7_online_meta", "B5_best_expert"]
+                  "B6_adwin_retrain", "B7_online_meta", "B5_best_expert",
+                  "B8_rwls_engine"]
     fig = plt.figure(figsize=(7.09, 3.5))
     gs = fig.add_gridspec(1, 2, width_ratios=[2.0, 1.0], wspace=0.28,
                           left=0.075, right=0.985, top=0.90, bottom=0.14)
@@ -258,7 +260,7 @@ def fig3(D, domains):
     colors = {k: c for k, c in zip(keys, [PALETTE["red_strong"], PALETTE["neutral_light"],
                                           PALETTE["neutral_mid"], PALETTE["blue_secondary"],
                                           PALETTE["violet"], PALETTE["teal"],
-                                          PALETTE["neutral_black"]])}
+                                          PALETTE["neutral_black"], PALETTE["orange"]])}
     for k in keys:
         curves = []
         for (d, s) in D:
@@ -285,7 +287,7 @@ def fig3(D, domains):
     gains = []
     BASELINES = ["B1_frozen_static", "B2_monthly_retrain", "B3_fforma",
                  "B4_hedge", "B5_best_expert", "B6_adwin_retrain",
-                 "B7_online_meta"]
+                 "B7_online_meta", "B8_rwls_engine"]
     for d in domains:
         g = []
         for s in SEEDS:
@@ -369,6 +371,12 @@ def fig4():
 # Fig. 5 -- mechanism pricing waterfall
 # ---------------------------------------------------------------------------
 def fig5():
+    """Mechanism pricing, per-domain normalised (v2).
+
+    The first revision pooled *raw* MSE deltas across domains whose endpoint
+    differs by 30x, so the few large-scale domains decided the sign of every arm.
+    v2 normalises each arm's penalty by that domain's own W_FULL before pooling.
+    """
     p = os.path.join(SUMMARY, "pricing.csv")
     if not os.path.exists(p):
         print("  Fig5 skipped (no pricing table)")
@@ -376,29 +384,108 @@ def fig5():
     import csv as _csv
     with open(p, encoding="utf-8") as f:
         rows = list(_csv.DictReader(f))
-    rows = [r for r in rows if r.get("delta_W") not in (None, "")]
-    rows.sort(key=lambda r: float(r["delta_W"]))
+    rows = [r for r in rows if r.get("delta_W_rel") not in (None, "")]
+    rows.sort(key=lambda r: float(r["delta_W_rel"]))
     labels = [r["arm"].split("_", 1)[1].replace("_", " ") for r in rows]
-    d = np.array([float(r["delta_W"]) for r in rows])
+    d = np.array([float(r["delta_W_rel"]) for r in rows])
     lo = np.array([float(r["ci_lo"]) for r in rows])
     hi = np.array([float(r["ci_hi"]) for r in rows])
+    npos = np.array([int(r["n_positive"]) for r in rows])
+    nneg = np.array([int(r["n_negative"]) for r in rows])
     isa = [r["kind"] == "ablation" for r in rows]
+    eng = [r["kind"] == "engine" for r in rows]
     sig = [str(r["significant"]) == "True" for r in rows]
-    fig, ax = plt.subplots(figsize=(5.6, 3.6),
-                           gridspec_kw=dict(left=0.30, right=0.97, top=0.92, bottom=0.16))
+
+    fig, ax = plt.subplots(figsize=(6.0, 3.9),
+                           gridspec_kw=dict(left=0.30, right=0.90, top=0.92,
+                                            bottom=0.16))
     y = np.arange(len(rows))
-    ax.barh(y, d, height=0.62,
-            color=[PALETTE["red_strong"] if (s and a) else
-                   (PALETTE["violet"] if s else PALETTE["neutral_light"])
-                   for a, s in zip(isa, sig)],
+
+    def colour(a, e, s):
+        if e:
+            return PALETTE["orange"]      # engine-level evidence, not a module
+        if s and a:
+            return PALETTE["red_strong"]
+        if s:
+            return PALETTE["violet"]
+        return PALETTE["neutral_light"]
+
+    ax.barh(y, d, height=0.62, color=[colour(a, e, s)
+                                      for a, e, s in zip(isa, eng, sig)],
             ec=PALETTE["neutral_dark"], lw=0.4)
-    ax.errorbar(d, y, xerr=[d - lo, hi - d], fmt="none",
-                ecolor=PALETTE["neutral_dark"], lw=0.6, capsize=2)
-    ax.set_yticks(y); ax.set_yticklabels(labels, fontsize=6.2)
+    ax.errorbar(d, y, xerr=[np.clip(d - lo, 0, None), np.clip(hi - d, 0, None)],
+                fmt="none", ecolor=PALETTE["neutral_dark"], lw=0.6, capsize=2)
+    ax.set_yticks(y)
+    ax.set_yticklabels(labels, fontsize=6.0)
     ax.axvline(0, color=PALETTE["neutral_dark"], lw=0.7)
-    ax.set_xlabel(r"$\Delta W$ when the mechanism is removed/permuted")
+    ax.set_xlabel("cost of removing the mechanism\n"
+                  r"($100\cdot\Delta W/W_{\mathrm{FULL}}$, % per domain, then pooled)")
+    # per-domain sign distribution on the right margin
+    for i, (p_, n_) in enumerate(zip(npos, nneg)):
+        ax.text(1.01, i, f"+{p_}/-{n_}", transform=ax.get_yaxis_transform(),
+                fontsize=5.2, va="center", color=PALETTE["neutral_dark"])
+    ax.text(1.01, len(rows) - 0.2, "domains\nworse/better",
+            transform=ax.get_yaxis_transform(), fontsize=5.0, va="bottom",
+            color=PALETTE["neutral_dark"])
     ax.text(0.02, 1.02, "a", transform=ax.transAxes, fontweight="bold", fontsize=8)
     save(fig, "Fig5_mechanism_pricing")
+
+
+# ---------------------------------------------------------------------------
+# Fig. 9 -- engine vs module contribution (v2)
+# ---------------------------------------------------------------------------
+def fig9():
+    """Split every domain's gain into its engine part and its module part.
+
+    engine = B8 (bare recency-LS engine) vs the best classical baseline (B1-B7);
+    module = FULL vs B8.  The first revision had no B8 arm, so this split was
+    impossible and the two effects were confounded in a single number.
+    """
+    p = os.path.join(SUMMARY, "h1_by_domain.csv")
+    if not os.path.exists(p):
+        print("  Fig9 skipped (no per-domain table)")
+        return
+    import csv as _csv
+    with open(p, encoding="utf-8") as f:
+        rows = list(_csv.DictReader(f))
+    if not rows or "module_gain_pct" not in rows[0]:
+        print("  Fig9 skipped (needs the v2 dual-caliber table)")
+        return
+    rows.sort(key=lambda r: float(r["gain_vs_classic_pct"]))
+    lab = [r["domain"] for r in rows]
+    # Engine contribution is measured directly against both endpoints rather
+    # than by differencing the two gain columns: those two columns have
+    # different denominators (best classic vs B8), so subtracting them would
+    # silently mix normalisations.
+    eng, mod = [], []
+    for r in rows:
+        wc = float(r.get("best_classic_W", "nan") or "nan")
+        we = float(r.get("engine_W", "nan") or "nan")
+        wf = float(r["full_W"])
+        eng.append(100.0 * (wc - we) / wc if np.isfinite(wc) and np.isfinite(we)
+                   and wc else np.nan)
+        mod.append(100.0 * (we - wf) / we if np.isfinite(we) and we else np.nan)
+    eng = np.array(eng, dtype=float)
+    mod = np.array(mod, dtype=float)
+    tot = np.array([float(r["gain_pct"]) for r in rows], dtype=float)
+    x = np.arange(len(lab))
+    fig, ax = plt.subplots(figsize=(6.8, 3.0),
+                           gridspec_kw=dict(left=0.085, right=0.985, top=0.90,
+                                            bottom=0.30))
+    w = 0.38
+    ax.bar(x - w / 2, eng, w, color=PALETTE["orange"], ec=PALETTE["neutral_dark"],
+           lw=0.4, label="engine (B8 vs best classic)")
+    ax.bar(x + w / 2, mod, w, color=PALETTE["blue_main"], ec=PALETTE["neutral_dark"],
+           lw=0.4, label="modules (FULL vs B8)")
+    ax.plot(x, tot, "o", ms=3.0, color=PALETTE["neutral_black"],
+            label="total vs best of B1-B8", zorder=4)
+    ax.axhline(0, color=PALETTE["neutral_dark"], lw=0.7)
+    ax.set_xticks(x)
+    ax.set_xticklabels(lab, fontsize=6.0, rotation=45, ha="right")
+    ax.set_ylabel("contribution to gain (%)")
+    ax.legend(fontsize=5.6, frameon=False, ncol=3, loc="upper left")
+    panel_label(ax, "a")
+    save(fig, "Fig9_engine_vs_modules")
 
 
 # ---------------------------------------------------------------------------
@@ -542,6 +629,7 @@ def main():
     fig4()
     fig5()
     fig8_ladder()
+    fig9()
     fig7(a.pool, a.domains)
 
 

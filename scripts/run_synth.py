@@ -51,7 +51,7 @@ def run_stream(meta, cfg: SystemConfig, arm, seed, n_warm=250, p_reset=0.0, p_gr
         prune_idle=cfg.prune_idle, k0=cfg.k0_clusters).init_from_train(PHI[:ntr], M, seed)
     s = CerebroCast(M, cfg, arm, field, PHI.shape[1], seed=seed,
                     placebo_reset_rate=p_reset, placebo_growth_rate=p_growth)
-    tiers, losses, deltas = [], [], []
+    tiers, losses, deltas, losses_raw = [], [], [], []
     for t in range(n):
         if t < 60:
             s.step(t, PHI[t], P[t], Y[t])
@@ -59,8 +59,10 @@ def run_stream(meta, cfg: SystemConfig, arm, seed, n_warm=250, p_reset=0.0, p_gr
         d = s.step(t, PHI[t], P[t], Y[t])
         tiers.append(d["tier"])
         losses.append(d["loss"])
+        losses_raw.append(d["loss_raw"])
         deltas.append(d["delta"])
     return dict(tiers=np.array(tiers), losses=np.array(losses),
+                losses_raw=np.array(losses_raw),
                 delta=np.array(deltas), truth=np.asarray(meta["labels"][60:]))
 
 
@@ -90,7 +92,11 @@ def experiment_h4(seeds=(7, 42, 2021), n_days=1200, label_window=5):
     """
     rows = []
     for sd in seeds:
-        for p in (0.02, 0.05, 0.10):
+        # v2: the low-switch-frequency band p in {0.001, 0.005} is the region in
+        # which the pre-registered false-alarm bound of L1 is supposed to hold and
+        # in which a detector has the best chance; the original grid started at
+        # 0.02 and therefore only measured the hard, high-frequency regime.
+        for p in (0.001, 0.005, 0.02, 0.05, 0.10):
             for sp in (0.0, 0.05):
                 for g in (False, True):
                     cfg = SynthConfig(n_days=n_days, p_switch=p, spike=sp,
@@ -133,6 +139,33 @@ def _recovery(losses: np.ndarray, b: int, window: int = 40,
     return float(idx[0]) if len(idx) else float(window)
 
 
+def _recovery_oracle90(losses: np.ndarray, oracle: np.ndarray, b: int,
+                       window: int = 60, frac: float = 0.9) -> float:
+    """The *pre-registered* recovery metric.
+
+    "Days until the system recovers to within 90% of the post-break oracle gap."
+    The gap is measured against the best expert available on those days, so a
+    break that makes the new regime intrinsically harder is not mistaken for slow
+    adaptation -- which is exactly the defect of the legacy definition (it
+    compared against the *pre-break* level, so a harder regime never recovered by
+    construction).  Returns `window` if the gap is never closed inside the window.
+    """
+    n = len(losses)
+    seg = slice(b, min(b + window, n))
+    l = np.asarray(losses)[seg]
+    o = np.asarray(oracle)[seg]
+    if len(l) == 0:
+        return float("nan")
+    k = min(5, len(l))
+    gap0 = float(np.mean(l[:k]) - np.mean(o[:k]))
+    if not np.isfinite(gap0) or gap0 <= 1e-12:
+        return 0.0
+    target = o + (1.0 - frac) * gap0          # 10% of the initial gap remains
+    run = np.cumsum(l) / np.arange(1, len(l) + 1)
+    ok = np.where(run <= target)[0]
+    return float(ok[0]) if len(ok) else float(window)
+
+
 def experiment_h2_p2(seeds=(7, 42, 2021, 3407, 12345), n_days=1200,
                      jumps=(0.25, 0.5, 1.0, 2.0, 4.0)):
     """Recovery time after an annotated break, and the RESET/ADAPT boundary."""
@@ -146,7 +179,13 @@ def experiment_h2_p2(seeds=(7, 42, 2021, 3407, 12345), n_days=1200,
             nores = run_stream(meta, sc, _arm("A5_no_reset"), sd)
             breaks = meta["breaks"]
             breaks = breaks[(breaks >= 60) & (breaks < len(full["losses"]) - 15)]
+            # the oracle reference: the best expert's raw MSE on each recorded day
+            Xs, Ys, Ps = meta["X"], meta["Y"], meta["P"]
+            oracle = np.array([float(np.min([np.mean((Ps[t][m] - Ys[t]) ** 2)
+                                             for m in range(Ps.shape[1])]))
+                               for t in range(60, len(Xs))])
             rec_full, rec_nores = [], []
+            rec_full95, rec_nores95 = [], []
             post_full, post_nores = [], []
             tier_full = []
             tiers_f = list(full["tiers"])
@@ -158,6 +197,8 @@ def experiment_h2_p2(seeds=(7, 42, 2021, 3407, 12345), n_days=1200,
                 r2 = _recovery(nores["losses"], b)
                 rec_full.append(r1)
                 rec_nores.append(r2)
+                rec_full95.append(_recovery_oracle90(full["losses_raw"], oracle, b))
+                rec_nores95.append(_recovery_oracle90(nores["losses_raw"], oracle, b))
                 w = slice(b, min(b + 10, len(full["losses"])))
                 post_full.append(np.mean(full["losses"][w]))
                 tier_full.append(tiers_f[b] if b < len(tiers_f) else "ADAPT")
@@ -165,6 +206,8 @@ def experiment_h2_p2(seeds=(7, 42, 2021, 3407, 12345), n_days=1200,
             rows.append(dict(seed=sd, jump_scale=js, n_breaks=len(rec_full),
                              recovery_full=float(np.mean(rec_full)) if rec_full else np.nan,
                              recovery_noreset=float(np.mean(rec_nores)) if rec_nores else np.nan,
+                             recovery_oracle90_full=float(np.mean(rec_full95)) if rec_full95 else np.nan,
+                             recovery_oracle90_noreset=float(np.mean(rec_nores95)) if rec_nores95 else np.nan,
                              post_loss_full=float(np.mean(post_full)) if post_full else np.nan,
                              post_loss_noreset=float(np.mean(post_nores)) if post_nores else np.nan,
                              frac_reset_at_break=(float(np.mean([t == "RESET" for t in tier_full]))
