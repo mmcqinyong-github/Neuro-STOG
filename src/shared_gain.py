@@ -368,22 +368,30 @@ def prepare(env: W1Env, n_calib: int):
     return backbone, calib, test
 
 
-def _rows(x, backbone, env, domains, upto):
-    idx = list(range(env.lookback, env.lookback + upto))
+def _rows(x, backbone, env, domains, upto, offset=0):
+    """offset 允许在长序列上滑动取段（真实数据用）。"""
+    idx = list(range(env.lookback + offset, env.lookback + offset + upto))
     base = np.stack([predict_backbone_ci(backbone, x[t - env.lookback : t]) for t in idx])
     y = x[idx]
-    own, slt = bank_trajectory(x[: env.lookback + upto], env.lookback, domains)
+    own, slt = bank_trajectory(x[: env.lookback + offset + upto], env.lookback, domains)
+    if offset > 0:
+        own, slt = own[offset:], slt[offset:]
     return base, y, y - base, own, slt
 
 
 ARMS = ("F", "FP", "S", "L", "D")
 
 
-def run_point(env: W1Env, lam: float, n_calib: int, arms=ARMS) -> dict:
-    """{arm: (wmse, mae, n_params)} + base + S 的增益向量。"""
+def run_point_real(env: W1Env, train: np.ndarray, calib: np.ndarray, test: np.ndarray,
+                   lam: float, n_calib: int, arms=ARMS) -> dict:
+    """真实序列版本：与 run_point 完全相同的五臂与指标，只是数据来自外部。
+
+    train / calib / test 均为 (n_obs + lookback, n_vars)，已含 lookback 前缀。
+    因果关系不变：骨干只在 train 拟合；calib 只用于拟合机制；test 只评估。
+    """
     domains = domain_index(env.n_vars, env.m_e)
-    n_calib = int(min(n_calib, env.n_calibrate))
-    backbone, calib, test = prepare(env, n_calib)
+    n_calib = int(min(n_calib, calib.shape[0] - env.lookback - 1))
+    backbone = fit_backbone_ci(train, env.lookback)
 
     b_ca, y_ca, r_ca, own_ca, slt_ca = _rows(calib, backbone, env, domains, n_calib)
     b_te, y_te, _, own_te, slt_te = _rows(test, backbone, env, domains, env.n_test)
@@ -409,3 +417,59 @@ def run_point(env: W1Env, lam: float, n_calib: int, arms=ARMS) -> dict:
         if arm.gains is not None:
             res[f"g_{k}"] = arm.gains
     return res
+
+
+def delta_res_real(env: W1Env, train: np.ndarray, calib: np.ndarray, test: np.ndarray,
+                   n_calib: int, lags: int = 6, pooled: bool = True,
+                   superset: bool = True) -> float:
+    """真实序列上的 Δ_res：全信息 oracle 相对无修正基线的最大可达优势（%）。
+
+    ⚠️ 设计约束（P3 规格 v1.2，由实测错误反推得出）
+    ============================================
+    **oracle 必须是所有被试机制载体的超集**，否则它就不是上界。
+    实测错误：v1.1 的 oracle 只有 3×6(滞后) + 3×5(聚合) = 33 维，
+    而 F 臂的载体 own 有 3×15 = 45 维，F 合法地超过了 oracle——
+    这不是"oracle 不完备"的细节问题，是**上界定义错误**。
+
+    v1.2 的 oracle 特征集（一次写定）：
+      1. 全通道 × `lags` 阶滞后                （3×6 = 18）
+      2. 全通道 × 15 维多尺度特征（即 per_var_features 的全量）（3×15 = 45）
+      3. 全通道 × 域池化坐标 8 维              （3×8 = 24）
+    合计 87 维 > 任何单臂的 45 维 ⇒ 超集成立。
+
+    高维 + 400 样本 ⇒ 必须靠 ridge 收缩。lam 网格含大值（到 1e5）以保证不因过拟合而
+    低估上界——否则 oracle 反而比机制差，同样破坏上界性质。
+    """
+    backbone = fit_backbone_ci(train, env.lookback)
+    n_calib = int(min(n_calib, calib.shape[0] - env.lookback - 1))
+    domains = domain_index(env.n_vars, env.m_e)
+
+    def resid(x, upto):
+        idx = list(range(env.lookback, env.lookback + upto))
+        base = np.stack([predict_backbone_ci(backbone, x[t - env.lookback : t]) for t in idx])
+        return x[idx] - base
+
+    def feats(x, upto):
+        rows = []
+        for t in range(env.lookback, env.lookback + upto):
+            parts = [np.concatenate([x[t - l] for l in range(1, lags + 1)])]
+            if pooled:
+                w = x[t - env.lookback : t]
+                parts.append(per_var_features(w).ravel())          # 3×15 = 45
+                _, slt = bank_at(w, domains)                       # (nv, D_COORD)
+                if superset:
+                    parts.append(slt.ravel())                      # 3×8 = 24
+            rows.append(np.concatenate(parts))
+        return np.stack(rows)
+
+    r_te, r_ca = resid(test, env.n_test), resid(calib, n_calib)
+    Xte, Xca = feats(test, env.n_test), feats(calib, n_calib)
+    none, _ = _metrics(r_te)
+    best = np.inf
+    for lam in (1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0, 1000.0, 1e4, 1e5):
+        A = np.concatenate([Xca, np.ones((len(Xca), 1))], axis=1)
+        P = np.linalg.solve(A.T @ A + lam * np.eye(A.shape[1]), A.T @ r_ca)
+        pred = np.concatenate([Xte, np.ones((len(Xte), 1))], axis=1) @ P
+        w, _ = _metrics(r_te - pred)
+        best = min(best, w)
+    return float((none - best) / none * 100.0)
