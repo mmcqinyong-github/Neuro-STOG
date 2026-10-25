@@ -1,0 +1,21 @@
+# RAFT 官方仓库完整性证据（W-P3-3 层 2 复现）
+
+仓库: https://github.com/archon159/RAFT
+commit: bfe2320f5d719d1e2a024330de3410b370bbb2a9
+commit 日期: 2025-05-12 18:17:27 +0900
+
+## git status --porcelain（唯一未跟踪项应为本工作区输出目录）
+?? checkpoints_p33/
+
+## git diff --stat（应为空 = 官方源码零改写）
+(空)
+
+## git diff --cached --stat（应为空 = 无暂存修改）
+(空)
+
+## 关键文件 SHA256
+models/RAFT.py                             3aa04a02132f41d27345448ee4af1e0eabdb77560b331354992fe676224819f8
+layers/Retrieval.py                        cd5b4c7d269a3682aaa630cef7ed5bbb8aa6dac7c812687655b227ff33b60434
+exp/exp_long_term_forecasting.py           75d72ad1bfe7b47cd340923b9f50c8bb6df140feb859aa35ae5e6e63b592ba69
+data_provider/data_loader.py               836de3f34b3eae264d96016a44426bda3245779e82d1d77a10ce9f9b05ca21b6
+run.py                                     a4a437fdc455463e9cf7d7e66cfddd24cc18d9bc417232ff59771fc369bbfe59

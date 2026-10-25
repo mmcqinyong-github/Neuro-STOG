@@ -4,3 +4,7 @@ __pycache__/
 _vendor/Light-skills/
 _vendor/*.tar.gz
 results/w1_run.log
+# W-P3-3：p33_raft_summary.txt / p33_raft_points.csv 是 p33_summary.txt / p33_points.csv 的同内容别名
+# （预注册 §7 命名对齐用），只提交主文件名避免仓库冗余
+results/p33_raft_summary.txt
+results/p33_raft_points.csv

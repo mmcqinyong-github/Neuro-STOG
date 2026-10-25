@@ -1,0 +1,13 @@
+{
+  "dataset": "exchange_rate",
+  "arm": "on",
+  "seed": 1,
+  "pred_len": 96,
+  "seq_len": 720,
+  "topm": 1,
+  "learning_rate": 0.0001,
+  "train_epochs": 10,
+  "mae": 0.20693610608577728,
+  "mse": 0.08962473273277283,
+  "setting": "long_term_forecast_p33_RAFT_custom_ftM_sl720_ll48_pl96_p33_exchange_rate_on_s1"
+}

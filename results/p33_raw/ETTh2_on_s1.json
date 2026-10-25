@@ -1,0 +1,13 @@
+{
+  "dataset": "ETTh2",
+  "arm": "on",
+  "seed": 1,
+  "pred_len": 96,
+  "seq_len": 720,
+  "topm": 10,
+  "learning_rate": 0.01,
+  "train_epochs": 10,
+  "mae": 0.34920036792755127,
+  "mse": 0.2828735411167145,
+  "setting": "long_term_forecast_p33_RAFT_ETTh2_ftM_sl720_ll48_pl96_p33_ETTh2_on_s1"
+}

@@ -1,0 +1,13 @@
+{
+  "dataset": "weather",
+  "arm": "on",
+  "seed": 1,
+  "pred_len": 96,
+  "seq_len": 720,
+  "topm": 1,
+  "learning_rate": 0.01,
+  "train_epochs": 10,
+  "mae": 0.22615008056163788,
+  "mse": 0.1675398349761963,
+  "setting": "long_term_forecast_p33_RAFT_custom_ftM_sl720_ll48_pl96_p33_weather_on_s1"
+}
