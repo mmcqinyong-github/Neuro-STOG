@@ -1,10 +1,6 @@
 __pycache__/
-*.py[cod]
-.ipynb_checkpoints/
-.venv/
-venv/
-results/pool/
-results/stream/
-results/synth/*.npz
-*.log
-.DS_Store
+*.pyc
+.workbuddy/
+_vendor/Light-skills/
+_vendor/*.tar.gz
+results/w1_run.log
