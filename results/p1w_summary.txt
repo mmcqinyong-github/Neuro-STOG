@@ -1,22 +1,24 @@
 === W-P1-W：真实架构上的 Δ_mech 验证 ===
-训练记录 103 条，可对齐单元 17 个
-（2 架构 × 4 数据集 × 3 体制，每单元 3 种子中位）
+训练记录 288 条，可对齐单元 48 个
+（4 架构 × 4 数据集 × 3 体制，每单元 3 种子中位）
 
-W1 主判据 排序可迁移性: ρ = +0.2108  95%CI [-0.3088, +0.7451]
+W1 主判据 排序可迁移性: ρ = +0.1775  95%CI [-0.1339, +0.4572]
    判据 ρ≥+0.40 且 CI 下界>0  →  不成立
 
 W2 单侧规则可迁移性（Δ_res<5% ⇒ 预测无效）:
-   被规则判为无效的单元 13 个，其中 Δ_mech_real≤0 的有 5 个
-   精确率 = 38.5%
-   判据 精确率≥70%  →  不成立
+   被规则判为无效的单元 36 个，其中 Δ_mech_real≤0 的有 26 个
+   精确率 = 72.2%
+   判据 精确率≥70%  →  成立
 
 W3 架构间一致性:
    DLinear        n= 12  ρ=+0.2657
-   iTransformer   n=  5  ρ=-0.2000
-   判据 ≥3/4 架构 ρ>0（实测 1/2）  →  不成立
+   iTransformer   n= 12  ρ=+0.0979
+   TimeMixer      n= 12  ρ=+0.6014
+   PatchTST       n= 12  ρ=+0.3217
+   判据 ≥3/4 架构 ρ>0（实测 4/4）  →  成立
 
-W4 容量跨度解释力: 同数据集内极差均值/全体极差 = 48.7%
-   判据 ≥25%  →  成立
+W4 容量跨度解释力: 架构间中位极差/全体极差 = 22.7%
+   判据 ≥25%  →  不成立
 
 逐单元明细:
   arch           dataset  regime  MSE_full  MSE_indep  Δ_mech(%)  Δ_res(%)
@@ -32,35 +34,71 @@ W4 容量跨度解释力: 同数据集内极差均值/全体极差 = 48.7%
   DLinear        ETTm2    noise    3.32927    3.42164     +2.700     +0.568
   DLinear        ETTm2    raw      1.02509    1.14134    +10.186     +1.659
   DLinear        ETTm2    shift    1.22475    1.49002    +17.803    +10.833
+  PatchTST       ETTh1    noise    3.75530    2.91611    -28.778     -0.124
+  PatchTST       ETTh1    raw      1.09389    0.58028    -88.512     -8.541
+  PatchTST       ETTh1    shift    1.09389    0.57985    -88.652     -0.948
+  PatchTST       ETTh2    noise    3.90331    3.17687    -22.867     +0.286
+  PatchTST       ETTh2    raw      1.02318    0.89668    -14.108     -3.874
+  PatchTST       ETTh2    shift    1.02318    0.81768    -25.133    +14.970
+  PatchTST       ETTm1    noise    4.33588    3.58679    -20.885     +4.494
+  PatchTST       ETTm1    raw      1.63614    1.25607    -30.259     +7.294
+  PatchTST       ETTm1    shift    1.63614    1.28475    -27.351     +2.210
+  PatchTST       ETTm2    noise    4.09775    3.46729    -18.183     +0.568
+  PatchTST       ETTm2    raw      1.09187    1.09625     +0.399     +1.659
+  PatchTST       ETTm2    shift    1.09187    1.10847     +1.497    +10.833
+  TimeMixer      ETTh1    noise    2.91806    2.84100     -2.712     -0.124
+  TimeMixer      ETTh1    raw      0.62082    0.57108     -8.711     -8.541
+  TimeMixer      ETTh1    shift    0.62082    0.57108     -8.711     -0.948
+  TimeMixer      ETTh2    noise    3.34179    3.14291     -6.328     +0.286
+  TimeMixer      ETTh2    raw      0.94193    0.80348    -17.232     -3.874
+  TimeMixer      ETTh2    shift    0.86132    0.83948     -2.602    +14.970
+  TimeMixer      ETTm1    noise    3.49950    3.44880     -1.470     +4.494
+  TimeMixer      ETTm1    raw      1.20056    1.19437     -0.519     +7.294
+  TimeMixer      ETTm1    shift    1.20056    1.15767     -3.705     +2.210
+  TimeMixer      ETTm2    noise    3.40570    3.39396     -0.346     +0.568
+  TimeMixer      ETTm2    raw      1.10162    1.08088     -1.919     +1.659
+  TimeMixer      ETTm2    shift    1.10162    1.05124     -4.792    +10.833
   iTransformer   ETTh1    noise    2.85592    2.87456     +0.649     -0.124
   iTransformer   ETTh1    raw      0.59728    0.59446     -0.473     -8.541
   iTransformer   ETTh1    shift    0.64093    0.61793     -3.722     -0.948
+  iTransformer   ETTh2    noise    3.19308    3.13956     -1.705     +0.286
   iTransformer   ETTh2    raw      0.79992    0.78413     -2.013     -3.874
   iTransformer   ETTh2    shift    0.79992    0.78413     -2.013    +14.970
+  iTransformer   ETTm1    noise    3.45493    3.44250     -0.361     +4.494
+  iTransformer   ETTm1    raw      1.20135    1.20772     +0.528     +7.294
+  iTransformer   ETTm1    shift    1.12123    1.21885     +8.009     +2.210
+  iTransformer   ETTm2    noise    3.41834    3.41062     -0.226     +0.568
+  iTransformer   ETTm2    raw      1.10845    1.06782     -3.805     +1.659
+  iTransformer   ETTm2    shift    1.07415    1.06782     -0.593    +10.833
 
 按架构的 Δ_mech 均值:
   DLinear        n= 12  mean=  +8.839%  median=  +4.669%
-  iTransformer   n=  5  mean=  -1.515%  median=  -2.013%
+  iTransformer   n= 12  mean=  -0.477%  median=  -0.533%
+  TimeMixer      n= 12  mean=  -4.921%  median=  -3.209%
+  PatchTST       n= 12  mean= -30.236%  median= -24.000%
 
 按体制的 Δ_mech 均值:
-  raw    n=  6  mean=  +4.026%
-  shift  n=  6  mean= +10.749%
-  noise  n=  5  mean=  +1.968%
+  raw    n= 16  mean=  -8.749%
+  shift  n= 16  mean=  -5.471%
+  noise  n= 16  mean=  -5.876%
 
 ======================================================================
 附加分析（剔除 shift，依据 diag_p1w_shift.py：3/4 架构对 shift 免疫）
 ======================================================================
-   单元数 11   W1' ρ = +0.4091  95%CI [-0.2455, +0.9091]
+   单元数 32   W1' ρ = +0.1727  95%CI [-0.2097, +0.5308]
    W1' 不通过
-   W2' 被标记 10 个，精确率 = 30.0%
-   W3' 架构 ρ>0: 1/4
+   W2' 被标记 28 个，精确率 = 71.4%
+   W3' 架构 ρ>0: 4/4
    逐架构 ρ（剔除 shift）:
      DLinear        n=  8  ρ=+0.0714
+     iTransformer   n=  8  ρ=+0.2143
+     TimeMixer      n=  8  ρ=+0.8095
+     PatchTST       n=  8  ρ=+0.1667
 
 收敛自检（预注册 §5.2 强制）:
-  epochs_run 中位 9，最大 20，触及上限 20 的占比 6.8%
+  epochs_run 中位 8，最大 20，触及上限 20 的占比 3.8%
   触及上限比例高 ⇒ 统一超参对该架构不公，绝对 MSE 不可跨架构比较（但消融差值仍可比较）
 
 ======================================================================
-裁决: 真实架构验证失败：Δ_res 结论须收窄到线性机制族   （W1=False W2=False W3=False W4=True）
+裁决: 部分通过（单侧规则成立，排序关系不全成立）   （W1=False W2=True W3=True W4=False）
 ======================================================================

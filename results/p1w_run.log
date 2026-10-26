@@ -110,3 +110,182 @@ device=cuda  archs=['DLinear', 'iTransformer', 'TimeMixer', 'PatchTST']  seeds=[
   iTransformer/ETTm1/raw/full/s0               mse=1.11181 val=1.51299 ep= 9 P=79520
   iTransformer/ETTm1/raw/full/s1               mse=1.21361 val=1.54990 ep=13 P=79520
   iTransformer/ETTm1/raw/full/s2               mse=1.20135 val=1.44068 ep=10 P=79520
+  iTransformer/ETTm1/raw/indep/s0              mse=1.22794 val=1.40695 ep=13 P=79520
+  iTransformer/ETTm1/raw/indep/s1              mse=1.19693 val=1.39037 ep=15 P=79520
+  iTransformer/ETTm1/raw/indep/s2              mse=1.20772 val=1.40383 ep=13 P=79520
+  iTransformer/ETTm1/shift/full/s0             mse=1.11181 val=1.52494 ep= 9 P=79520
+  iTransformer/ETTm1/shift/full/s1             mse=1.13238 val=1.50692 ep= 9 P=79520
+  iTransformer/ETTm1/shift/full/s2             mse=1.12123 val=1.54129 ep= 8 P=79520
+  iTransformer/ETTm1/shift/indep/s0            mse=1.22794 val=1.52991 ep=13 P=79520
+  iTransformer/ETTm1/shift/indep/s1            mse=1.21885 val=1.50433 ep=13 P=79520
+  iTransformer/ETTm1/shift/indep/s2            mse=1.20040 val=1.52136 ep=12 P=79520
+  iTransformer/ETTm1/noise/full/s0             mse=3.43818 val=3.85319 ep=12 P=79520
+  iTransformer/ETTm1/noise/full/s1             mse=3.46041 val=3.93607 ep=12 P=79520
+  iTransformer/ETTm1/noise/full/s2             mse=3.45493 val=3.85306 ep=13 P=79520
+  iTransformer/ETTm1/noise/indep/s0            mse=3.43709 val=3.74447 ep=20 P=79520
+  iTransformer/ETTm1/noise/indep/s1            mse=3.44250 val=3.68605 ep=20 P=79520
+  iTransformer/ETTm1/noise/indep/s2            mse=3.44602 val=3.73190 ep=20 P=79520
+  iTransformer/ETTm2/raw/full/s0               mse=1.10845 val=0.44636 ep= 6 P=79520
+  iTransformer/ETTm2/raw/full/s1               mse=1.06546 val=0.44807 ep= 7 P=79520
+  iTransformer/ETTm2/raw/full/s2               mse=1.12007 val=0.44908 ep= 6 P=79520
+  iTransformer/ETTm2/raw/indep/s0              mse=1.07549 val=0.44748 ep= 7 P=79520
+  iTransformer/ETTm2/raw/indep/s1              mse=1.06782 val=0.44255 ep= 8 P=79520
+  iTransformer/ETTm2/raw/indep/s2              mse=1.06274 val=0.44872 ep= 8 P=79520
+  iTransformer/ETTm2/shift/full/s0             mse=1.07415 val=1.33156 ep= 7 P=79520
+  iTransformer/ETTm2/shift/full/s1             mse=1.06546 val=1.32285 ep= 7 P=79520
+  iTransformer/ETTm2/shift/full/s2             mse=1.08511 val=1.33563 ep= 7 P=79520
+  iTransformer/ETTm2/shift/indep/s0            mse=1.06694 val=1.26426 ep= 8 P=79520
+  iTransformer/ETTm2/shift/indep/s1            mse=1.06782 val=1.26679 ep= 8 P=79520
+  iTransformer/ETTm2/shift/indep/s2            mse=1.07591 val=1.27731 ep= 7 P=79520
+  iTransformer/ETTm2/noise/full/s0             mse=3.41121 val=2.61558 ep= 9 P=79520
+  iTransformer/ETTm2/noise/full/s1             mse=3.42022 val=2.60628 ep=10 P=79520
+  iTransformer/ETTm2/noise/full/s2             mse=3.41834 val=2.62701 ep=10 P=79520
+  iTransformer/ETTm2/noise/indep/s0            mse=3.41062 val=2.63729 ep=14 P=79520
+  iTransformer/ETTm2/noise/indep/s1            mse=3.40503 val=2.63560 ep=11 P=79520
+  iTransformer/ETTm2/noise/indep/s2            mse=3.41244 val=2.64281 ep=14 P=79520
+  TimeMixer/ETTh1/raw/full/s0                  mse=0.62082 val=0.58107 ep= 6 P=149870
+  TimeMixer/ETTh1/raw/full/s1                  mse=0.60108 val=0.49611 ep= 7 P=149870
+  TimeMixer/ETTh1/raw/full/s2                  mse=0.84145 val=0.50395 ep=14 P=149870
+  TimeMixer/ETTh1/raw/indep/s0                 mse=0.59530 val=0.46666 ep=11 P=89753
+  TimeMixer/ETTh1/raw/indep/s1                 mse=0.56604 val=0.46697 ep= 9 P=89753
+  TimeMixer/ETTh1/raw/indep/s2                 mse=0.57108 val=0.45228 ep= 8 P=89753
+  TimeMixer/ETTh1/shift/full/s0                mse=0.62082 val=1.57522 ep= 6 P=149870
+  TimeMixer/ETTh1/shift/full/s1                mse=0.60108 val=1.30593 ep= 7 P=149870
+  TimeMixer/ETTh1/shift/full/s2                mse=0.65352 val=1.58955 ep= 6 P=149870
+  TimeMixer/ETTh1/shift/indep/s0               mse=0.58188 val=1.43103 ep= 9 P=89753
+  TimeMixer/ETTh1/shift/indep/s1               mse=0.56604 val=1.41581 ep= 9 P=89753
+  TimeMixer/ETTh1/shift/indep/s2               mse=0.57108 val=1.36833 ep= 8 P=89753
+  TimeMixer/ETTh1/noise/full/s0                mse=2.93282 val=2.84896 ep= 6 P=149870
+  TimeMixer/ETTh1/noise/full/s1                mse=2.86852 val=2.77153 ep= 7 P=149870
+  TimeMixer/ETTh1/noise/full/s2                mse=2.91806 val=2.79892 ep= 6 P=149870
+  TimeMixer/ETTh1/noise/indep/s0               mse=2.84100 val=2.70394 ep=12 P=89753
+  TimeMixer/ETTh1/noise/indep/s1               mse=2.82971 val=2.69966 ep= 9 P=89753
+  TimeMixer/ETTh1/noise/indep/s2               mse=2.89397 val=2.68690 ep=13 P=89753
+  TimeMixer/ETTh2/raw/full/s0                  mse=0.94193 val=1.70485 ep= 6 P=149870
+  TimeMixer/ETTh2/raw/full/s1                  mse=0.84982 val=1.58325 ep= 6 P=149870
+  TimeMixer/ETTh2/raw/full/s2                  mse=0.95986 val=1.70210 ep= 6 P=149870
+  TimeMixer/ETTh2/raw/indep/s0                 mse=0.84624 val=1.47855 ep= 8 P=89753
+  TimeMixer/ETTh2/raw/indep/s1                 mse=0.80348 val=1.49183 ep= 7 P=89753
+  TimeMixer/ETTh2/raw/indep/s2                 mse=0.78637 val=1.48418 ep= 7 P=89753
+  TimeMixer/ETTh2/shift/full/s0                mse=0.88086 val=2.46115 ep= 8 P=149870
+  TimeMixer/ETTh2/shift/full/s1                mse=0.84982 val=2.53646 ep= 6 P=149870
+  TimeMixer/ETTh2/shift/full/s2                mse=0.86132 val=2.64173 ep= 7 P=149870
+  TimeMixer/ETTh2/shift/indep/s0               mse=0.80459 val=2.34196 ep= 7 P=89753
+  TimeMixer/ETTh2/shift/indep/s1               mse=0.83948 val=2.31459 ep= 6 P=89753
+  TimeMixer/ETTh2/shift/indep/s2               mse=0.84363 val=2.20448 ep= 6 P=89753
+  TimeMixer/ETTh2/noise/full/s0                mse=3.44336 val=3.58210 ep=10 P=149870
+  TimeMixer/ETTh2/noise/full/s1                mse=3.34179 val=3.58972 ep= 9 P=149870
+  TimeMixer/ETTh2/noise/full/s2                mse=3.20466 val=3.71508 ep= 8 P=149870
+  TimeMixer/ETTh2/noise/indep/s0               mse=3.14291 val=3.53735 ep=11 P=89753
+  TimeMixer/ETTh2/noise/indep/s1               mse=3.11695 val=3.54922 ep= 9 P=89753
+  TimeMixer/ETTh2/noise/indep/s2               mse=3.19873 val=3.54616 ep=10 P=89753
+  TimeMixer/ETTm1/raw/full/s0                  mse=1.20056 val=1.63036 ep= 6 P=149870
+  TimeMixer/ETTm1/raw/full/s1                  mse=1.20057 val=1.64474 ep= 6 P=149870
+  TimeMixer/ETTm1/raw/full/s2                  mse=1.18627 val=1.57780 ep= 6 P=149870
+  TimeMixer/ETTm1/raw/indep/s0                 mse=1.19437 val=1.43211 ep=10 P=89753
+  TimeMixer/ETTm1/raw/indep/s1                 mse=1.19712 val=1.39058 ep=10 P=89753
+  TimeMixer/ETTm1/raw/indep/s2                 mse=1.16830 val=1.38149 ep=11 P=89753
+  TimeMixer/ETTm1/shift/full/s0                mse=1.20056 val=1.56569 ep= 6 P=149870
+  TimeMixer/ETTm1/shift/full/s1                mse=1.20057 val=1.56446 ep= 6 P=149870
+  TimeMixer/ETTm1/shift/full/s2                mse=1.18627 val=1.55473 ep= 6 P=149870
+  TimeMixer/ETTm1/shift/indep/s0               mse=1.18148 val=1.49291 ep= 8 P=89753
+  TimeMixer/ETTm1/shift/indep/s1               mse=1.14346 val=1.50714 ep= 8 P=89753
+  TimeMixer/ETTm1/shift/indep/s2               mse=1.15767 val=1.47932 ep=10 P=89753
+  TimeMixer/ETTm1/noise/full/s0                mse=3.49950 val=3.90158 ep= 6 P=149870
+  TimeMixer/ETTm1/noise/full/s1                mse=3.49110 val=3.91919 ep= 6 P=149870
+  TimeMixer/ETTm1/noise/full/s2                mse=3.55634 val=3.85161 ep= 8 P=149870
+  TimeMixer/ETTm1/noise/indep/s0               mse=3.49606 val=3.68602 ep=15 P=89753
+  TimeMixer/ETTm1/noise/indep/s1               mse=3.44880 val=3.67623 ep=13 P=89753
+  TimeMixer/ETTm1/noise/indep/s2               mse=3.44686 val=3.67957 ep=12 P=89753
+  TimeMixer/ETTm2/raw/full/s0                  mse=1.10162 val=0.43308 ep= 6 P=149870
+  TimeMixer/ETTm2/raw/full/s1                  mse=1.09037 val=0.44390 ep= 6 P=149870
+  TimeMixer/ETTm2/raw/full/s2                  mse=1.11143 val=0.44482 ep= 6 P=149870
+  TimeMixer/ETTm2/raw/indep/s0                 mse=1.03619 val=0.44120 ep= 8 P=89753
+  TimeMixer/ETTm2/raw/indep/s1                 mse=1.08891 val=0.43196 ep= 7 P=89753
+  TimeMixer/ETTm2/raw/indep/s2                 mse=1.08088 val=0.45271 ep= 7 P=89753
+  TimeMixer/ETTm2/shift/full/s0                mse=1.10162 val=1.14307 ep= 6 P=149870
+  TimeMixer/ETTm2/shift/full/s1                mse=1.09037 val=1.15019 ep= 6 P=149870
+  TimeMixer/ETTm2/shift/full/s2                mse=1.11143 val=1.15316 ep= 6 P=149870
+  TimeMixer/ETTm2/shift/indep/s0               mse=1.03619 val=1.12493 ep= 8 P=89753
+  TimeMixer/ETTm2/shift/indep/s1               mse=1.05124 val=1.18056 ep= 8 P=89753
+  TimeMixer/ETTm2/shift/indep/s2               mse=1.05186 val=1.21641 ep= 8 P=89753
+  TimeMixer/ETTm2/noise/full/s0                mse=3.43659 val=2.59017 ep=10 P=149870
+  TimeMixer/ETTm2/noise/full/s1                mse=3.36573 val=2.58130 ep= 7 P=149870
+  TimeMixer/ETTm2/noise/full/s2                mse=3.40570 val=2.58509 ep= 6 P=149870
+  TimeMixer/ETTm2/noise/indep/s0               mse=3.39292 val=2.60638 ep= 9 P=89753
+  TimeMixer/ETTm2/noise/indep/s1               mse=3.39396 val=2.61398 ep= 9 P=89753
+  TimeMixer/ETTm2/noise/indep/s2               mse=3.41633 val=2.61995 ep= 9 P=89753
+  PatchTST/ETTh1/raw/full/s0                   mse=1.06199 val=0.73332 ep= 6 P=2722880
+  PatchTST/ETTh1/raw/full/s1                   mse=1.09389 val=0.74988 ep= 6 P=2722880
+  PatchTST/ETTh1/raw/full/s2                   mse=1.12999 val=0.75149 ep= 8 P=2722880
+  PatchTST/ETTh1/raw/indep/s0                  mse=0.58028 val=0.41948 ep=10 P=141920
+  PatchTST/ETTh1/raw/indep/s1                  mse=0.56485 val=0.40125 ep= 8 P=141920
+  PatchTST/ETTh1/raw/indep/s2                  mse=0.59946 val=0.42391 ep=13 P=141920
+  PatchTST/ETTh1/shift/full/s0                 mse=1.06199 val=1.64206 ep= 6 P=2722880
+  PatchTST/ETTh1/shift/full/s1                 mse=1.09389 val=1.72588 ep= 6 P=2722880
+  PatchTST/ETTh1/shift/full/s2                 mse=1.10485 val=1.67859 ep= 6 P=2722880
+  PatchTST/ETTh1/shift/indep/s0                mse=0.59118 val=1.42063 ep= 6 P=141920
+  PatchTST/ETTh1/shift/indep/s1                mse=0.56485 val=1.32622 ep= 8 P=141920
+  PatchTST/ETTh1/shift/indep/s2                mse=0.57985 val=1.36717 ep= 6 P=141920
+  PatchTST/ETTh1/noise/full/s0                 mse=3.63717 val=3.32363 ep= 6 P=2722880
+  PatchTST/ETTh1/noise/full/s1                 mse=3.78119 val=3.41433 ep= 6 P=2722880
+  PatchTST/ETTh1/noise/full/s2                 mse=3.75530 val=3.37492 ep= 6 P=2722880
+  PatchTST/ETTh1/noise/indep/s0                mse=2.91611 val=2.71993 ep= 8 P=141920
+  PatchTST/ETTh1/noise/indep/s1                mse=2.93873 val=2.73574 ep= 8 P=141920
+  PatchTST/ETTh1/noise/indep/s2                mse=2.90974 val=2.74199 ep= 7 P=141920
+  PatchTST/ETTh2/raw/full/s0                   mse=0.97877 val=1.96490 ep= 6 P=2722880
+  PatchTST/ETTh2/raw/full/s1                   mse=1.05903 val=2.00343 ep= 7 P=2722880
+  PatchTST/ETTh2/raw/full/s2                   mse=1.02318 val=1.85928 ep= 7 P=2722880
+  PatchTST/ETTh2/raw/indep/s0                  mse=0.80794 val=1.51005 ep=11 P=141920
+  PatchTST/ETTh2/raw/indep/s1                  mse=0.93049 val=1.48146 ep= 6 P=141920
+  PatchTST/ETTh2/raw/indep/s2                  mse=0.89668 val=1.58115 ep= 6 P=141920
+  PatchTST/ETTh2/shift/full/s0                 mse=0.97877 val=3.30633 ep= 6 P=2722880
+  PatchTST/ETTh2/shift/full/s1                 mse=1.05903 val=4.08255 ep= 7 P=2722880
+  PatchTST/ETTh2/shift/full/s2                 mse=1.02318 val=3.64334 ep= 7 P=2722880
+  PatchTST/ETTh2/shift/indep/s0                mse=0.80642 val=2.40593 ep=15 P=141920
+  PatchTST/ETTh2/shift/indep/s1                mse=0.81768 val=2.50290 ep= 8 P=141920
+  PatchTST/ETTh2/shift/indep/s2                mse=0.81782 val=2.25439 ep=12 P=141920
+  PatchTST/ETTh2/noise/full/s0                 mse=3.88233 val=4.32959 ep= 6 P=2722880
+  PatchTST/ETTh2/noise/full/s1                 mse=4.04537 val=4.48400 ep= 6 P=2722880
+  PatchTST/ETTh2/noise/full/s2                 mse=3.90331 val=4.29892 ep= 6 P=2722880
+  PatchTST/ETTh2/noise/indep/s0                mse=3.23555 val=3.52025 ep=11 P=141920
+  PatchTST/ETTh2/noise/indep/s1                mse=3.17687 val=3.57063 ep=10 P=141920
+  PatchTST/ETTh2/noise/indep/s2                mse=3.15599 val=3.58514 ep= 8 P=141920
+  PatchTST/ETTm1/raw/full/s0                   mse=1.56598 val=1.88288 ep= 6 P=2722880
+  PatchTST/ETTm1/raw/full/s1                   mse=1.65161 val=1.98171 ep= 6 P=2722880
+  PatchTST/ETTm1/raw/full/s2                   mse=1.63614 val=2.09713 ep= 6 P=2722880
+  PatchTST/ETTm1/raw/indep/s0                  mse=1.26164 val=1.53416 ep= 9 P=141920
+  PatchTST/ETTm1/raw/indep/s1                  mse=1.25607 val=1.49519 ep= 9 P=141920
+  PatchTST/ETTm1/raw/indep/s2                  mse=1.20399 val=1.41668 ep=10 P=141920
+  PatchTST/ETTm1/shift/full/s0                 mse=1.56598 val=1.71415 ep= 6 P=2722880
+  PatchTST/ETTm1/shift/full/s1                 mse=1.65161 val=1.83017 ep= 6 P=2722880
+  PatchTST/ETTm1/shift/full/s2                 mse=1.63614 val=1.90186 ep= 6 P=2722880
+  PatchTST/ETTm1/shift/indep/s0                mse=1.25793 val=1.49373 ep= 6 P=141920
+  PatchTST/ETTm1/shift/indep/s1                mse=1.28475 val=1.49236 ep= 8 P=141920
+  PatchTST/ETTm1/shift/indep/s2                mse=1.30107 val=1.50554 ep= 7 P=141920
+  PatchTST/ETTm1/noise/full/s0                 mse=4.33588 val=4.55685 ep= 6 P=2722880
+  PatchTST/ETTm1/noise/full/s1                 mse=4.45416 val=4.82737 ep= 6 P=2722880
+  PatchTST/ETTm1/noise/full/s2                 mse=4.32965 val=4.51170 ep= 6 P=2722880
+  PatchTST/ETTm1/noise/indep/s0                mse=3.58679 val=3.81572 ep=15 P=141920
+  PatchTST/ETTm1/noise/indep/s1                mse=3.55496 val=3.91672 ep= 7 P=141920
+  PatchTST/ETTm1/noise/indep/s2                mse=3.59298 val=3.96064 ep= 6 P=141920
+  PatchTST/ETTm2/raw/full/s0                   mse=1.09187 val=0.64935 ep= 6 P=2722880
+  PatchTST/ETTm2/raw/full/s1                   mse=1.08907 val=0.63183 ep= 6 P=2722880
+  PatchTST/ETTm2/raw/full/s2                   mse=1.13525 val=0.66317 ep= 6 P=2722880
+  PatchTST/ETTm2/raw/indep/s0                  mse=1.05927 val=0.44824 ep= 7 P=141920
+  PatchTST/ETTm2/raw/indep/s1                  mse=1.09625 val=0.44680 ep= 6 P=141920
+  PatchTST/ETTm2/raw/indep/s2                  mse=1.09720 val=0.44352 ep= 6 P=141920
+  PatchTST/ETTm2/shift/full/s0                 mse=1.09187 val=1.51095 ep= 6 P=2722880
+  PatchTST/ETTm2/shift/full/s1                 mse=1.08907 val=1.41942 ep= 6 P=2722880
+  PatchTST/ETTm2/shift/full/s2                 mse=1.13525 val=1.63808 ep= 6 P=2722880
+  PatchTST/ETTm2/shift/indep/s0                mse=1.09641 val=1.25491 ep= 6 P=141920
+  PatchTST/ETTm2/shift/indep/s1                mse=1.13638 val=1.10917 ep= 7 P=141920
+  PatchTST/ETTm2/shift/indep/s2                mse=1.10847 val=1.13224 ep= 8 P=141920
+  PatchTST/ETTm2/noise/full/s0                 mse=4.09775 val=3.36297 ep= 6 P=2722880
+  PatchTST/ETTm2/noise/full/s1                 mse=4.09246 val=3.34129 ep= 6 P=2722880
+  PatchTST/ETTm2/noise/full/s2                 mse=4.14287 val=3.32653 ep= 6 P=2722880
+  PatchTST/ETTm2/noise/indep/s0                mse=3.46729 val=2.70513 ep= 8 P=141920
+  PatchTST/ETTm2/noise/indep/s1                mse=3.46239 val=2.70233 ep= 9 P=141920
+  PatchTST/ETTm2/noise/indep/s2                mse=3.48768 val=2.69918 ep=13 P=141920
+
+总耗时 956s

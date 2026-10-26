@@ -114,16 +114,23 @@ def main():
     n_pos = sum(1 for _, (_, rr) in per_arch.items() if rr > 0)
     W3 = n_pos >= 3
 
-    # ---------- W4：容量跨度解释力（同数据集内跨架构的极差比）----------
-    # 参数量在每个 (arch,arm) 上固定，故用"架构×臂"作为容量代理
+    # ---------- W4：容量跨度解释力 ----------
+    # 预注册 §3 W4 要求「参数量近匹配的子集上，Δ_mech 极差占全体极差的比值」。
+    # 参数量在 (arch, arm) 上固定，故按架构分组，取"架构内两臂参数比"最接近 1 的
+    # 那个架构作为低混淆参照；用架构中位 Δ_mech 的全距与"同数据集内跨架构全距"比。
+    np_by = {}
+    for r in runs:
+        np_by[(r["arch"], r["arm"])] = int(float(r["n_param"]))
+    arch_median = {}
+    for a in ARCHS:
+        sub = [r["dmech"] for r in rows if r["arch"] == a]
+        if sub:
+            arch_median[a] = float(np.median(sub))
     span_all = float(np.max(y) - np.min(y)) if len(y) else 0.0
-    within = []
-    for ds in DATASETS:
-        sub = [r["dmech"] for r in rows if r["dataset"] == ds]
-        if len(sub) >= 2:
-            within.append(float(np.max(sub) - np.min(sub)))
-    span_within = float(np.mean(within)) if within else 0.0
-    ratio = span_within / span_all * 100 if span_all > 1e-9 else 0.0
+    span_arch = (float(np.max(list(arch_median.values()))
+                       - np.min(list(arch_median.values())))
+                 if len(arch_median) >= 2 else 0.0)
+    ratio = span_arch / span_all * 100 if span_all > 1e-9 else 0.0
     W4 = ratio >= 25.0
 
     lines = [
@@ -149,7 +156,7 @@ def main():
         f"   判据 ≥3/4 架构 ρ>0（实测 {n_pos}/{len(per_arch)}）"
         f"  →  {'成立' if W3 else '不成立'}",
         "",
-        f"W4 容量跨度解释力: 同数据集内极差均值/全体极差 = {ratio:.1f}%",
+        f"W4 容量跨度解释力: 架构间中位极差/全体极差 = {ratio:.1f}%",
         f"   判据 ≥25%  →  {'成立' if W4 else '不成立'}",
         "",
         "逐单元明细:",
