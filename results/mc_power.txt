@@ -1,0 +1,2 @@
+sigma_seed=0.001681 df=26 median_CV=0.2249%
+n_req_median=0.06 over5=1/10 P1=False P2=False

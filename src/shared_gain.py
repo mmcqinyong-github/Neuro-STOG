@@ -421,7 +421,7 @@ def run_point_real(env: W1Env, train: np.ndarray, calib: np.ndarray, test: np.nd
 
 def delta_res_real(env: W1Env, train: np.ndarray, calib: np.ndarray, test: np.ndarray,
                    n_calib: int, lags: int = 6, pooled: bool = True,
-                   superset: bool = True) -> float:
+                   superset: bool = True, leak: bool = False) -> float:
     """真实序列上的 Δ_res：全信息 oracle 相对无修正基线的最大可达优势（%）。
 
     ⚠️ 设计约束（P3 规格 v1.2，由实测错误反推得出）
@@ -465,11 +465,44 @@ def delta_res_real(env: W1Env, train: np.ndarray, calib: np.ndarray, test: np.nd
     r_te, r_ca = resid(test, env.n_test), resid(calib, n_calib)
     Xte, Xca = feats(test, env.n_test), feats(calib, n_calib)
     none, _ = _metrics(r_te)
-    best = np.inf
-    for lam in (1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0, 1000.0, 1e4, 1e5):
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # 【W-P1-S 修复】原实现（下方 leak=True 分支）在**测试段**上挑 lam：
+    #     for lam: pred = Xte @ P; w = _metrics(r_te - pred); best = min(best, w)
+    # 这是用测试真值选超参，Δ_res 系统性偏乐观。见 W-P1-S裁决报告.md §1 D1。
+    # 现在默认走 honest 分支：把 calib 段对半切，前半拟合、后半选 lam，
+    # 测试段**完全不参与任何选择**。leak=True 保留以便复现旧数值。
+    # ═══════════════════════════════════════════════════════════════════════
+    if leak:
+        best = np.inf
+        for lam in (1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0, 1000.0, 1e4, 1e5):
+            A = np.concatenate([Xca, np.ones((len(Xca), 1))], axis=1)
+            P = np.linalg.solve(A.T @ A + lam * np.eye(A.shape[1]), A.T @ r_ca)
+            pred = np.concatenate([Xte, np.ones((len(Xte), 1))], axis=1) @ P
+            w, _ = _metrics(r_te - pred)
+            best = min(best, w)
+        return float((none - best) / none * 100.0)
+
+    # ---- honest：calib 对半，前半拟合后半选 lam ----
+    h = len(Xca) // 2
+    if h < 5 or len(Xca) - h < 5:
+        # calib 太短，无法切分 ⇒ 退化为固定 lam（不选参，宁可保守）
         A = np.concatenate([Xca, np.ones((len(Xca), 1))], axis=1)
-        P = np.linalg.solve(A.T @ A + lam * np.eye(A.shape[1]), A.T @ r_ca)
+        P = np.linalg.solve(A.T @ A + 10.0 * np.eye(A.shape[1]), A.T @ r_ca)
         pred = np.concatenate([Xte, np.ones((len(Xte), 1))], axis=1) @ P
         w, _ = _metrics(r_te - pred)
-        best = min(best, w)
-    return float((none - best) / none * 100.0)
+        return float((none - w) / none * 100.0)
+
+    Xf, rf, Xs, rs = Xca[:h], r_ca[:h], Xca[h:], r_ca[h:]
+    Af = np.concatenate([Xf, np.ones((len(Xf), 1))], axis=1)
+    As = np.concatenate([Xs, np.ones((len(Xs), 1))], axis=1)
+    At = np.concatenate([Xte, np.ones((len(Xte), 1))], axis=1)
+    best_lam, best_w = 10.0, np.inf
+    for lam in (1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0, 1000.0, 1e4, 1e5):
+        P = np.linalg.solve(Af.T @ Af + lam * np.eye(Af.shape[1]), Af.T @ rf)
+        w, _ = _metrics(rs - As @ P)          # 只在 calib 后半上选
+        if w < best_w:
+            best_w, best_lam = w, lam
+    P = np.linalg.solve(Af.T @ Af + best_lam * np.eye(Af.shape[1]), Af.T @ rf)
+    w, _ = _metrics(r_te - At @ P)            # 测试段只评不选
+    return float((none - w) / none * 100.0)

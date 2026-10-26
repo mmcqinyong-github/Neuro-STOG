@@ -1,0 +1,91 @@
+=== W-P1-V：外部数据集验证 ===
+  solar    raw   off=   0 | Δ_res=   +12.31% Δ_mech=  +20.72% best=F
+  solar    raw   off= 400 | Δ_res=    +3.99% Δ_mech=  +22.42% best=F
+  solar    raw   off= 800 | Δ_res=   +11.20% Δ_mech=  +31.76% best=F
+  solar    raw   off=1200 | Δ_res=    +5.60% Δ_mech=  +23.90% best=F
+  solar    raw   off=1600 | Δ_res=    -2.46% Δ_mech=  +11.30% best=F
+  solar    shift off=   0 | Δ_res=   +20.78% Δ_mech=  +38.87% best=F
+  solar    shift off= 400 | Δ_res=   +13.20% Δ_mech=  +31.67% best=F
+  solar    shift off= 800 | Δ_res=   +24.49% Δ_mech=  +42.90% best=F
+  solar    shift off=1200 | Δ_res=   +29.08% Δ_mech=  +49.46% best=F
+  solar    shift off=1600 | Δ_res=   +13.74% Δ_mech=  +12.96% best=F
+  solar    noise off=   0 | Δ_res=    +2.67% Δ_mech=   +2.36% best=L
+  solar    noise off= 400 | Δ_res=    +1.02% Δ_mech=   +0.38% best=D
+  solar    noise off= 800 | Δ_res=    +1.45% Δ_mech=   +1.83% best=D
+  solar    noise off=1200 | Δ_res=    +2.34% Δ_mech=   +2.54% best=L
+  solar    noise off=1600 | Δ_res=    +0.52% Δ_mech=   -0.85% best=L
+  PEMS04   raw   off=   0 | Δ_res=    +2.12% Δ_mech=   +0.68% best=L
+  PEMS04   raw   off= 400 | Δ_res=    +2.09% Δ_mech=   +3.79% best=FP
+  PEMS04   raw   off= 800 | Δ_res=    -1.82% Δ_mech=   -2.58% best=L
+  PEMS04   raw   off=1200 | Δ_res=    +5.46% Δ_mech=   +3.71% best=D
+  PEMS04   raw   off=1600 | Δ_res=    +1.69% Δ_mech=   +1.75% best=L
+  PEMS04   shift off=   0 | Δ_res=    +2.14% Δ_mech=   +2.56% best=D
+  PEMS04   shift off= 400 | Δ_res=    +1.55% Δ_mech=   +3.37% best=S
+  PEMS04   shift off= 800 | Δ_res=    -0.50% Δ_mech=   +0.47% best=S
+  PEMS04   shift off=1200 | Δ_res=    +6.94% Δ_mech=   +1.13% best=S
+  PEMS04   shift off=1600 | Δ_res=    +0.20% Δ_mech=   +5.59% best=F
+  PEMS04   noise off=   0 | Δ_res=    +0.62% Δ_mech=   +0.22% best=L
+  PEMS04   noise off= 400 | Δ_res=    -0.11% Δ_mech=   +0.12% best=L
+  PEMS04   noise off= 800 | Δ_res=    -0.14% Δ_mech=   -0.16% best=L
+  PEMS04   noise off=1200 | Δ_res=    +0.65% Δ_mech=   +1.77% best=D
+  PEMS04   noise off=1600 | Δ_res=    +0.53% Δ_mech=   +1.63% best=D
+  PEMS08   raw   off=   0 | Δ_res=    +0.33% Δ_mech=   +7.69% best=S
+  PEMS08   raw   off= 400 | Δ_res=    +2.67% Δ_mech=   +4.43% best=FP
+  PEMS08   raw   off= 800 | Δ_res=    +0.37% Δ_mech=   -1.09% best=L
+  PEMS08   raw   off=1200 | Δ_res=    -3.15% Δ_mech=   +1.10% best=L
+  PEMS08   raw   off=1600 | Δ_res=    +4.60% Δ_mech=   +2.02% best=S
+  PEMS08   shift off=   0 | Δ_res=    +8.34% Δ_mech=  +22.02% best=F
+  PEMS08   shift off= 400 | Δ_res=    +3.75% Δ_mech=   +1.87% best=S
+  PEMS08   shift off= 800 | Δ_res=    +3.01% Δ_mech=   +1.39% best=D
+  PEMS08   shift off=1200 | Δ_res=    +2.26% Δ_mech=   +6.48% best=D
+  PEMS08   shift off=1600 | Δ_res=   +18.93% Δ_mech=  +19.15% best=S
+  PEMS08   noise off=   0 | Δ_res=    +0.40% Δ_mech=   -0.66% best=D
+  PEMS08   noise off= 400 | Δ_res=    +0.13% Δ_mech=   +0.59% best=D
+  PEMS08   noise off= 800 | Δ_res=    +0.58% Δ_mech=   -0.61% best=L
+  PEMS08   noise off=1200 | Δ_res=    +0.26% Δ_mech=   -1.84% best=L
+  PEMS08   noise off=1600 | Δ_res=    +0.97% Δ_mech=   +2.01% best=L
+
+=== W-P1-V：外部数据集验证（solar / PEMS04 / PEMS08）===
+点数: 45  (3 数据集 × 3 体制 × 5 偏移)
+耗时: 587.5s
+
+X1 排序可迁移性（主判据）: ρ = +0.7281
+   逐点 95%CI [+0.4909, +0.8708]
+   cluster bootstrap（按 3 数据集分块）95%CI [+0.5474, +0.8588]
+   判据 ρ≥+0.50 且 CI 下界>0  →  成立
+
+X2 绝对水平同号: 外部中位 +2.09%  vs  p32 中位 +1.95%  →  成立
+
+X3 无分辨力区普遍性: |Δ_res|<5% = 33/45 = 73.3%
+   判据 ≥25%  →  成立
+
+X4 符号可行域: Δ_mech>0 占比 = 84.4%
+   判据 [20%,80%]  →  不成立
+
+X5 合并一致性: 45 新点 + 105 p32 点 = 150 点
+   合并 ρ = +0.8259  95%CI [+0.7266, +0.8959]
+   p32 主结果 ρ = +0.8420，|差| = 0.0161
+   判据 同号且 |差|≤0.25  →  成立
+
+按数据集:
+  数据集       n  median(Δ_res)  median(Δ_mech)  ρ(组内)
+  solar     15        +5.60%         +20.72%  +0.861
+  PEMS04    15        +0.65%          +1.63%  +0.550
+  PEMS08    15        +0.97%          +1.87%  +0.643
+
+按体制:
+  raw    n= 15  Δ_res=   +3.00%  Δ_mech=   +8.77%  ρ=+0.579
+  shift  n= 15  Δ_res=   +9.86%  Δ_mech=  +15.99%  ρ=+0.796
+  noise  n= 15  Δ_res=   +0.79%  Δ_mech=   +0.62%  ρ=+0.732
+
+best_arm 计数:
+  F    12
+  FP    2
+  S     7
+  L    14
+  D    10
+
+======================================================================
+裁决: 部分通过   （4/5 项成立）
+含义: 只能写「主相关可迁移，但边界条件需限定在 7 数据集范围内」
+======================================================================

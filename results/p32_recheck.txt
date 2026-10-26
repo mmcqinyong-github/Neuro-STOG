@@ -1,0 +1,4 @@
+rho_leak=0.846900 ci=[0.7279,0.9157] pass=True
+rho_honest=0.841976 ci=[0.7347,0.9108] pass=True
+sign_flip_datasets=1/7
+verdict=W-P3-2 结论在无泄漏口径下存活

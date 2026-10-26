@@ -1,0 +1,6 @@
+T1=False T2=True T3=True T4=False
+slope_neg=47 slope_pos=19 n=105
+span_all=6.7523 span_near=2.6664 ratio=0.3949
+flip_rate=0.4000
+rho_dres_dmech=0.8469 partial=0.7879
+verdict=H_cap 部分成立
