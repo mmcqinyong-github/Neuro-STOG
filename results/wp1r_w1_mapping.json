@@ -1,0 +1,55 @@
+{
+  "source": "W1预注册规格-v1.0.md + src/shared_gain.py:W1Env",
+  "m": 3,
+  "sigma_xi2": 0.0,
+  "justify_xi": "shared_drive() 生成的 c_t 经 inject_shift 直接加进通道观测，单通道可从自身历史直接估计其影响 ⇒ σ_ξ²≈0（完全可识别）",
+  "n_calib": [
+    50,
+    100,
+    200,
+    400
+  ],
+  "prediction": {
+    "n=50,σ²=0.0625": {
+      "G_upperbound_tau0": 0.0008333333333333333,
+      "tau_hat2_threshold_for_G_negative": 0.0008333333333333334,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=50,σ²=1.0": {
+      "G_upperbound_tau0": 0.013333333333333332,
+      "tau_hat2_threshold_for_G_negative": 0.013333333333333334,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=100,σ²=0.0625": {
+      "G_upperbound_tau0": 0.00041666666666666664,
+      "tau_hat2_threshold_for_G_negative": 0.0004166666666666667,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=100,σ²=1.0": {
+      "G_upperbound_tau0": 0.006666666666666666,
+      "tau_hat2_threshold_for_G_negative": 0.006666666666666667,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=200,σ²=0.0625": {
+      "G_upperbound_tau0": 0.00020833333333333332,
+      "tau_hat2_threshold_for_G_negative": 0.00020833333333333335,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=200,σ²=1.0": {
+      "G_upperbound_tau0": 0.003333333333333333,
+      "tau_hat2_threshold_for_G_negative": 0.0033333333333333335,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=400,σ²=0.0625": {
+      "G_upperbound_tau0": 0.00010416666666666666,
+      "tau_hat2_threshold_for_G_negative": 0.00010416666666666667,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    },
+    "n=400,σ²=1.0": {
+      "G_upperbound_tau0": 0.0016666666666666666,
+      "tau_hat2_threshold_for_G_negative": 0.0016666666666666668,
+      "predicted_sign_if_tau_hat2_above_threshold": "negative"
+    }
+  },
+  "verdict_rule": "若 W1 实测 S−F < 0 且此处预测的阈值 τ̂² 小于 W1 的实际异质性，则 R0 通过。本文件在查看 W1 实测数值之前写出。"
+}
