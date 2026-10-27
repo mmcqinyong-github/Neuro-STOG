@@ -1,0 +1,79 @@
+==============================================================================
+W-P2-B 双通道解离 —— 判据裁决
+单元数 672   变体 ['ach', 'const', 'credit', 'cw_ar', 'cw_cr', 'da', 'moe2', 'none']
+==============================================================================
+
+--- A. 读出门来源（预算逐位精确的 2×2 列主效应）---
+    （同一行内 η 源相同 ⇒ 写入轨迹相同 ⇒ 差异只来自 θ 来源）
+     行(写源)   read=novelty   read=credit    Δ(pp)  win/total
+ write=d_s            ach        credit    +3.55    28/28     成立
+             raw     Δ=  +3.20 pp   (n=7)
+             shift   Δ=  +5.90 pp   (n=7)
+             noise   Δ=  +1.17 pp   (n=7)
+             rewire  Δ=  +3.94 pp   (n=7)
+ write=u_c          cw_ar         cw_cr    +4.42    28/28     成立
+             raw     Δ=  +4.06 pp   (n=7)
+             shift   Δ=  +6.97 pp   (n=7)
+             noise   Δ=  +1.58 pp   (n=7)
+             rewire  Δ=  +5.08 pp   (n=7)
+  ⇒ A 整体：成立（读出门应由 DA 信用驱动，而非新奇信号）
+
+--- B1/B2 单通道必要性（预注册原判据，诚实裁决）---
+  regime   ach gain   da gain  Δ(da-ach)
+     raw     +13.94    +14.48      +0.54
+   shift     +19.88    +21.17      +1.29
+   noise      +7.49     +7.19      -0.30
+  rewire     +18.41    +18.90      +0.49
+  B1（rewire 上 da 优于 ach ≥5pp）：⛔ 不成立
+  B2（noise/shift 上 ach 优于 da ≥5pp）：⛔ 不成立
+  ⇒ 按 §7 失败条款：**不主张**『两条通道各自单独不充分』。
+     解离实验未产生预期的双向失效，如实记为负面结果。
+
+--- B3 各体制最优变体（描述性，非判据）---
+  regime       ach   credit    cw_ar    cw_cr       da    const   最优
+     raw    +13.94   +17.13   +14.55   +18.61   +14.48   +18.19   cw_cr
+   shift    +19.88   +25.78   +22.26   +29.23   +21.17   +29.51   const
+   noise     +7.49    +8.66    +7.52    +9.10    +7.19    +8.81   cw_cr
+  rewire    +18.41   +22.35   +19.38   +24.45   +18.90   +23.22   cw_cr
+
+--- B4 时间结构（dynamic vs 预算匹配静态 const）---
+    [先审计] r(budget, gain) = +0.354  (n=588)
+  raw     credit−const =   -1.05 pp  (win 3/7)
+  shift   credit−const =   -3.74 pp  (win 1/7)
+  noise   credit−const =   -0.15 pp  (win 4/7)
+  rewire  credit−const =   -0.87 pp  (win 3/7)
+  预算残差 |const−credit| = 20.0%  r(budget,gain)=+0.354
+  ⚠ B4 **不可解读**：const 与 credit 的平均预算不等价（>5%），
+     而增益与预算正相关 ⇒ const 的优势可能只是'平均练得多'。
+     按 §9.4 处理：既不主张'时间结构有价值'，也不主张'无价值'。
+  B4：不可解读（阈值 ≥3pp 且 ≥2/3 单元为正）
+
+--- B7 与 Black-Mamba / DynaME 代理的协议内对比（任务③）---
+    诚实声明：抽象层面的代理复现，非原文代码与原始超参。
+  regime    credit    da(BM)       Δ |    cw_cr     moe2       Δ
+     raw   +17.13%   +14.48%  +2.66 |  +18.61%  +18.86%  -0.25
+   shift   +25.78%   +21.17%  +4.61 |  +29.23%  +29.07%  +0.16
+   noise    +8.66%    +7.19%  +1.47 |   +9.10%   +9.23%  -0.13
+  rewire   +22.35%   +18.90%  +3.45 |  +24.45%  +24.44%  +0.01
+  ⇒ 相对单标量惊讶门控有 +1.5~4.6pp 的小幅优势；
+    相对性能路由专家竞争（DynaME 代理）**基本打平** —— 诚实记为'无优势'。
+
+--- B5 参数与预算审计 ---
+  ach       params(per-dataset OK)  budget(shift)=  2599.0
+  credit    params(per-dataset OK)  budget(shift)=  2599.0
+  cw_ar     params(per-dataset OK)  budget(shift)=  3259.2
+  cw_cr     params(per-dataset OK)  budget(shift)=  3259.2
+  da        params(per-dataset OK)  budget(shift)=  2498.4
+  const     params(per-dataset OK)  budget(shift)=  3519.3
+  数据集内参数一致性：成立 []
+  （跨数据集 [79238, 116201] 的差异来自 n_vars 6 vs 9，属数据属性，非变体差异）
+  行1(ach=2674) vs 行2(cw_cr=3081) 预算残差 13.22% ⇒ 行主效应 ⛔ 仍被预算污染
+
+--- B6 跨数据集（外部不参与调参）---
+  内部 shift: ach=+23.53%  credit=+30.44%  Δ= +6.91pp
+  外部 shift: ach=+10.75%  credit=+14.11%  Δ= +3.37pp
+  B6：外部 Δ=+3.37pp ⇒ 成立
+
+==============================================================================
+裁决汇总： A=✅  B1=⛔  B2=⛔  B4=⛔  B5参数=✅  B6=✅
+==============================================================================
